@@ -12,34 +12,59 @@ import {
   needsOCR 
 } from '../utils/textProcessor.js'
 
+// Disable PDF.js worker for Node.js environment
+pdfjsLib.GlobalWorkerOptions.workerSrc = ''
+
 /**
  * Extract text from PDF using pdfjs-dist (fallback method)
  * @param {string} filePath - Path to PDF file
  * @returns {Promise<{text: string, pages: number}>}
  */
 const extractFromPDFWithPdfjs = async (filePath) => {
-  try {
-    const dataBuffer = await fs.readFile(filePath)
-    const loadingTask = pdfjsLib.getDocument({ data: dataBuffer })
-    const pdfDocument = await loadingTask.promise
-    
-    let fullText = ''
-    const numPages = pdfDocument.numPages
-    
-    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+  const dataBuffer = await fs.readFile(filePath)
+  const loadingTask = pdfjsLib.getDocument({
+    data: dataBuffer,
+    useSystemFonts: true,
+    standardFontDataUrl: null,
+    disableFontFace: true,
+    verbosity: 0,
+    isEvalSupported: false,
+    stopAtErrors: false,
+    password: ''
+  })
+  const pdfDocument = await loadingTask.promise
+  
+  let fullText = ''
+  let successfulPages = 0
+  const numPages = pdfDocument.numPages
+  
+  for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+    try {
       const page = await pdfDocument.getPage(pageNum)
       const textContent = await page.getTextContent()
-      const pageText = textContent.items.map(item => item.str).join(' ')
-      fullText += pageText + '\n'
+      const pageText = textContent.items
+        .filter(item => item.str && item.str.trim())
+        .map(item => item.str)
+        .join(' ')
+      if (pageText.trim()) {
+        fullText += pageText + '\n'
+        successfulPages++
+      }
+    } catch (pageError) {
+      logger.warn(`Failed to extract page ${pageNum}: ${pageError.message}`)
+      // Continue with other pages
     }
-    
-    return {
-      text: fullText,
-      pages: numPages,
-    }
-  } catch (error) {
-    logger.error(`PDF.js extraction failed: ${error.message}`)
-    throw error
+  }
+  
+  if (successfulPages === 0) {
+    throw new Error('No text content extracted from any page')
+  }
+  
+  logger.info(`Successfully extracted text from ${successfulPages}/${numPages} pages`)
+  
+  return {
+    text: fullText,
+    pages: numPages,
   }
 }
 
@@ -49,26 +74,44 @@ const extractFromPDFWithPdfjs = async (filePath) => {
  * @returns {Promise<{text: string, pages: number}>}
  */
 export const extractFromPDF = async (filePath) => {
+  let lastError = null;
+  
+  // Try pdfjs-dist first (most robust for corrupted PDFs)
   try {
-    // Try primary method (pdf-parse)
-    const dataBuffer = await fs.readFile(filePath)
-    const data = await pdfParse(dataBuffer)
-
-    return {
-      text: data.text,
-      pages: data.numpages,
+    logger.info('Attempting PDF extraction with pdfjs-dist...')
+    const result = await extractFromPDFWithPdfjs(filePath)
+    if (result.text && result.text.trim().length > 50) {
+      return result
     }
-  } catch (error) {
-    logger.warn(`Primary PDF extraction failed: ${error.message}, trying fallback method...`)
-    
-    try {
-      // Fallback to pdfjs-dist
-      return await extractFromPDFWithPdfjs(filePath)
-    } catch (fallbackError) {
-      logger.error(`All PDF extraction methods failed: ${fallbackError.message}`)
-      throw new Error(`Failed to extract text from PDF: ${error.message}. Please ensure your PDF is not corrupted or password-protected.`)
-    }
+    throw new Error('Insufficient text extracted')
+  } catch (pdfjsError) {
+    lastError = pdfjsError
+    logger.warn(`PDF.js extraction failed: ${pdfjsError.message}`)
   }
+  
+  // Try pdf-parse as fallback
+  try {
+    logger.info('Attempting PDF extraction with pdf-parse...')
+    const dataBuffer = await fs.readFile(filePath)
+    const data = await pdfParse(dataBuffer, {
+      max: 0, // no page limit
+      version: 'v2.0.550'
+    })
+
+    if (data.text && data.text.trim().length > 50) {
+      return {
+        text: data.text,
+        pages: data.numpages,
+      }
+    }
+    throw new Error('Insufficient text extracted')
+  } catch (parseError) {
+    logger.error(`pdf-parse extraction failed: ${parseError.message}`)
+    lastError = parseError
+  }
+  
+  // All methods failed
+  throw new Error(`Failed to extract text from PDF. The file may be severely corrupted or password-protected. Last error: ${lastError.message}`)
 }
 
 /**

@@ -86,7 +86,7 @@ const UploadPage = () => {
       
       // Store role analysis data
       if (roleResponse.success && roleResponse.data) {
-        const { rolePrediction, skillAnalysis, recommendations } = roleResponse.data
+        const { rolePrediction, skillAnalysis, recommendations, roadmap } = roleResponse.data
         
         setPredictedRoles({
           primaryRole: rolePrediction.primaryRole,
@@ -94,10 +94,39 @@ const UploadPage = () => {
           confidence: rolePrediction.primaryRole.confidence
         })
         
+        // Transform skills data for chart visualization
+        const allSkills = new Map()
+        
+        // Add skills you have (current level = 80-100, required = 100)
+        skillAnalysis.skillsHave?.forEach(skillObj => {
+          const skillName = skillObj.skill || skillObj
+          allSkills.set(skillName, {
+            skill: skillName,
+            current: 85, // You have this skill at proficient level
+            required: 100
+          })
+        })
+        
+        // Add missing skills (current = 0 or low, required = 100)
+        skillAnalysis.skillsMissing?.forEach(skillObj => {
+          const skillName = skillObj.skill || skillObj
+          if (!allSkills.has(skillName)) {
+            allSkills.set(skillName, {
+              skill: skillName,
+              current: 20, // Beginner or no knowledge
+              required: 100
+            })
+          }
+        })
+        
+        // Convert to array and limit to top 15 skills for readability
+        const chartData = Array.from(allSkills.values()).slice(0, 15)
+        
         setSkillGaps({
           skillsHave: skillAnalysis.skillsHave,
           skillsMissing: skillAnalysis.skillsMissing,
-          skillGapSummary: skillAnalysis.skillGapSummary
+          skillGapSummary: skillAnalysis.skillGapSummary,
+          chartData: chartData
         })
         
         // Transform salary boost opportunities to match frontend format
@@ -110,7 +139,7 @@ const UploadPage = () => {
           description: `${boost.skill} is a high-impact skill that can significantly increase your earning potential.`
         }))
         setSalaryBoost(transformedSalaryBoost)
-        setRoadmap(recommendations || [])
+        setRoadmap(roadmap || null)
         setResources([]) // Resources can be generated client-side based on missing skills
       }
       

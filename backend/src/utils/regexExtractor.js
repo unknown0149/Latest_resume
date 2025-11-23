@@ -328,25 +328,70 @@ export function extractCurrentTitle(text) {
 export function extractSkillKeywords(text) {
   if (!text) return { skills: [], confidence: 0 };
   
+  // Order matters: Check more specific skills first to avoid false matches
   const commonSkills = [
-    'java', 'python', 'javascript', 'typescript', 'react', 'node.js', 'angular', 'vue',
-    'spring boot', 'django', 'flask', 'express', 'fastapi',
-    'sql', 'mysql', 'postgresql', 'mongodb', 'redis', 'elasticsearch',
-    'aws', 'azure', 'gcp', 'docker', 'kubernetes',
-    'git', 'jenkins', 'ci/cd', 'agile', 'scrum',
-    'rest api', 'graphql', 'microservices',
-    'html', 'css', 'sass', 'tailwind', 'bootstrap',
-    'tensorflow', 'pytorch', 'pandas', 'numpy', 'machine learning',
+    // Programming Languages
+    'java', 'python', 'javascript', 'typescript', 'c++', 'c#', 'go', 'rust', 'php', 'ruby', 'kotlin', 'swift', 'r',
+    
+    // Web Frameworks & Libraries (check compound names first)
+    'react native', 'react.js', 'node.js', 'nodejs', 'vue.js', 'next.js', 'express.js', 'spring boot',
+    'react', 'angular', 'vue', 'express', 'spring', 'django', 'flask', 'fastapi', 'laravel', 'asp.net', '.net',
+    
+    // Databases (check specific ones before generic SQL/NoSQL)
+    'postgresql', 'mongodb', 'elasticsearch', 'dynamodb', 'cassandra', 'mariadb',
+    'mysql', 'sqlite', 'oracle', 'redis', 'neo4j', 'nosql', 'sql',
+    
+    // Cloud & DevOps
+    'google cloud', 'github actions', 'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'k8s', 
+    'terraform', 'ansible', 'jenkins', 'ci/cd', 'gitlab', 'circleci',
+    
+    // Version Control & Collaboration
+    'github', 'gitlab', 'bitbucket', 'git', 'svn', 'agile', 'scrum', 'jira', 'confluence',
+    
+    // API & Architecture
+    'rest api', 'restful', 'graphql', 'microservices', 'soap', 'grpc',
+    
+    // Frontend
+    'html5', 'css3', 'tailwindcss', 'google sheets', 'html', 'css', 'sass', 'scss', 'less', 
+    'tailwind', 'bootstrap', 'jquery', 'webpack', 'vite', 'redux', 'mobx',
+    
+    // Data Science & ML
+    'scikit-learn', 'machine learning', 'deep learning', 'computer vision', 'data science', 
+    'data analysis', 'data visualization', 'jupyter notebook', 'tensorflow', 'pytorch', 'keras',
+    'pandas', 'numpy', 'matplotlib', 'seaborn', 'nlp', 'jupyter', 'anaconda',
+    
+    // BI & Analytics
+    'power bi', 'powerbi', 'tableau', 'looker', 'qlik', 'excel', 'google analytics',
+    
+    // Testing
+    'jest', 'mocha', 'chai', 'pytest', 'junit', 'selenium', 'cypress', 'postman',
+    
+    // Mobile
+    'react native', 'flutter', 'android', 'ios', 'swift', 'kotlin',
+    
+    // Other Tools
+    'visual studio code', 'vscode', 'intellij', 'linux', 'unix', 'bash', 'powershell', 'vim', 'eclipse'
   ];
   
   const textLower = text.toLowerCase();
   const foundSkills = new Set();
   
+  // Process skills in order - longer/more specific phrases first
   for (const skill of commonSkills) {
     // Use word boundary for accurate matching
-    const pattern = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+    const escapedSkill = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const pattern = new RegExp(`\\b${escapedSkill}\\b`, 'gi');
+    
     if (pattern.test(textLower)) {
-      foundSkills.add(skill);
+      // Only add if not a substring match of already found skills
+      const isSubstring = [...foundSkills].some(found => {
+        return (found.length > skill.length && found.includes(skill)) || 
+               (skill.length > found.length && skill.includes(found));
+      });
+      
+      if (!isSubstring) {
+        foundSkills.add(skill);
+      }
     }
   }
   

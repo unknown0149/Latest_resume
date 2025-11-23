@@ -194,7 +194,7 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
         totalPotentialIncrease: potentialIncrease,
       },
       recommendations: generateRecommendations(skillsMissing, roleData),
-      roadmap: generateRoadmap(skillsMissing, roleData),
+      roadmap: generateRoadmap(skillsMissing, skillsHave, roleData.role),
       metadata: {
         analyzedAt: new Date().toISOString(),
         resumeSkillsCount: normalizedSkills.length,

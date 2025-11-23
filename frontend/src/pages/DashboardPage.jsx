@@ -203,10 +203,10 @@ const DashboardPage = () => {
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              {Object.values(skillGaps)[0]?.chartData && (
+              {skillGaps?.chartData && (
                 <>
-                  <SkillGapChart data={Object.values(skillGaps)[0].chartData} type="bar" />
-                  <SkillGapChart data={Object.values(skillGaps)[0].chartData} type="radar" />
+                  <SkillGapChart data={skillGaps.chartData} type="bar" />
+                  <SkillGapChart data={skillGaps.chartData} type="radar" />
                 </>
               )}
             </motion.div>

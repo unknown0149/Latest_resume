@@ -80,6 +80,8 @@ router.post('/resume/:resumeId/analyze-role', async (req, res) => {
       skillsHave: skillAnalysis.skillsHave,
       skillsMissing: skillAnalysis.skillsMissing,
       salaryBoostOpportunities: skillAnalysis.salaryBoostOpportunities.topOpportunities,
+      recommendations: skillAnalysis.recommendations,
+      roadmap: skillAnalysis.roadmap,
       analyzedAt: new Date()
     };
     
@@ -99,7 +101,8 @@ router.post('/resume/:resumeId/analyze-role', async (req, res) => {
       data: {
         rolePrediction: rolePrediction,
         skillAnalysis: skillAnalysis,
-        recommendations: skillAnalysis.recommendations
+        recommendations: skillAnalysis.recommendations,
+        roadmap: skillAnalysis.roadmap
       }
     });
     

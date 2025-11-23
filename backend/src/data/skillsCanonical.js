@@ -369,6 +369,7 @@ export const SKILLS_CANONICAL = {
   
   'jupyter': 'Jupyter',
   'jupyter notebook': 'Jupyter',
+  'jupyter notebooks': 'Jupyter',
   
   'apache spark': 'Apache Spark',
   'spark': 'Apache Spark',
@@ -390,6 +391,32 @@ export const SKILLS_CANONICAL = {
   'ml flow': 'MLflow',
   
   'kubeflow': 'Kubeflow',
+  
+  // === BI & ANALYTICS TOOLS ===
+  'power bi': 'Power BI',
+  'powerbi': 'Power BI',
+  'microsoft power bi': 'Power BI',
+  
+  'tableau': 'Tableau',
+  'tableau desktop': 'Tableau',
+  
+  'looker': 'Looker',
+  'google looker': 'Looker',
+  
+  'qlik': 'Qlik',
+  'qlikview': 'QlikView',
+  'qlik sense': 'Qlik Sense',
+  
+  'excel': 'Excel',
+  'microsoft excel': 'Excel',
+  'ms excel': 'Excel',
+  
+  'google sheets': 'Google Sheets',
+  
+  'google analytics': 'Google Analytics',
+  
+  'data visualization': 'Data Visualization',
+  'data viz': 'Data Visualization',
   
   'nlp': 'NLP',
   'natural language processing': 'NLP',
