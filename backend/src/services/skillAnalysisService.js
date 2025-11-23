@@ -7,6 +7,7 @@ import { normalizeSkillsArray, matchSkillsFuzzy } from '../utils/skillNormalizer
 import { getRoleByName } from '../data/roleSkillDatabase.js';
 import { getTopSalaryBoostOpportunities, calculatePotentialIncrease } from '../data/salaryBoostSkills.js';
 import { logger } from '../utils/logger.js';
+import { generateRoadmap } from './roadmapService.js';
 
 /**
  * Estimate skill proficiency level based on heuristics
@@ -193,6 +194,7 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
         totalPotentialIncrease: potentialIncrease,
       },
       recommendations: generateRecommendations(skillsMissing, roleData),
+      roadmap: generateRoadmap(skillsMissing, roleData),
       metadata: {
         analyzedAt: new Date().toISOString(),
         resumeSkillsCount: normalizedSkills.length,

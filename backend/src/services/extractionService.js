@@ -3,6 +3,7 @@ import mammoth from 'mammoth'
 import Tesseract from 'tesseract.js'
 import sharp from 'sharp'
 import fs from 'fs/promises'
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs'
 import { logger } from '../utils/logger.js'
 import { 
   normalizeText, 
@@ -12,12 +13,44 @@ import {
 } from '../utils/textProcessor.js'
 
 /**
+ * Extract text from PDF using pdfjs-dist (fallback method)
+ * @param {string} filePath - Path to PDF file
+ * @returns {Promise<{text: string, pages: number}>}
+ */
+const extractFromPDFWithPdfjs = async (filePath) => {
+  try {
+    const dataBuffer = await fs.readFile(filePath)
+    const loadingTask = pdfjsLib.getDocument({ data: dataBuffer })
+    const pdfDocument = await loadingTask.promise
+    
+    let fullText = ''
+    const numPages = pdfDocument.numPages
+    
+    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+      const page = await pdfDocument.getPage(pageNum)
+      const textContent = await page.getTextContent()
+      const pageText = textContent.items.map(item => item.str).join(' ')
+      fullText += pageText + '\n'
+    }
+    
+    return {
+      text: fullText,
+      pages: numPages,
+    }
+  } catch (error) {
+    logger.error(`PDF.js extraction failed: ${error.message}`)
+    throw error
+  }
+}
+
+/**
  * Extract text from PDF file
  * @param {string} filePath - Path to PDF file
  * @returns {Promise<{text: string, pages: number}>}
  */
 export const extractFromPDF = async (filePath) => {
   try {
+    // Try primary method (pdf-parse)
     const dataBuffer = await fs.readFile(filePath)
     const data = await pdfParse(dataBuffer)
 
@@ -26,8 +59,15 @@ export const extractFromPDF = async (filePath) => {
       pages: data.numpages,
     }
   } catch (error) {
-    logger.error(`PDF extraction failed: ${error.message}`)
-    throw new Error(`Failed to extract text from PDF: ${error.message}`)
+    logger.warn(`Primary PDF extraction failed: ${error.message}, trying fallback method...`)
+    
+    try {
+      // Fallback to pdfjs-dist
+      return await extractFromPDFWithPdfjs(filePath)
+    } catch (fallbackError) {
+      logger.error(`All PDF extraction methods failed: ${fallbackError.message}`)
+      throw new Error(`Failed to extract text from PDF: ${error.message}. Please ensure your PDF is not corrupted or password-protected.`)
+    }
   }
 }
 

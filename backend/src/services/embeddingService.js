@@ -1,41 +1,36 @@
 /**
  * Embedding Service
- * Generates vector embeddings for resumes and jobs using Google Gemini API
- * Supports mock embeddings for local development/testing
+ * Generates vector embeddings for resumes and jobs using Hugging Face models
+ * Uses @xenova/transformers for local inference
  */
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { pipeline } from '@xenova/transformers';
 import { logger } from '../utils/logger.js';
 import crypto from 'crypto';
 
-// Initialize Google Gemini (if API key available)
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY?.trim();
-let genAI = null;
+// Initialize Hugging Face embedding model
+let embedder = null;
+const EMBEDDING_MODEL = 'Xenova/all-MiniLM-L6-v2'; // 384 dimensions, fast and accurate
+const EMBEDDING_DIMENSIONS = 384;
 
-try {
-  if (GOOGLE_API_KEY && GOOGLE_API_KEY.length > 0) {
-    genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
-    logger.info('Google Gemini API initialized successfully');
-  } else {
-    logger.warn('Google API key not configured - using mock embeddings');
+// Initialize model on startup
+(async () => {
+  try {
+    embedder = await pipeline('feature-extraction', EMBEDDING_MODEL);
+    logger.info(`Hugging Face embedding model loaded: ${EMBEDDING_MODEL}`);
+  } catch (error) {
+    logger.error('Failed to load Hugging Face embedding model:', error.message);
   }
-} catch (error) {
-  logger.error('Failed to initialize Google Gemini API:', error.message);
-  genAI = null;
-}
+})();
 
 // LRU Cache for embeddings (max 1000 entries)
 const embeddingCache = new Map();
 const MAX_CACHE_SIZE = 1000;
 
-// Rate limiting for Google API (1500/day = 62.5/hour ≈ 1/minute)
-let apiCallCount = 0;
-let apiCallResetTime = Date.now() + 3600000; // 1 hour from now
-
 /**
- * Generate deterministic mock embedding from text (for testing without API)
+ * Generate deterministic mock embedding from text (fallback)
  */
-export function generateMockEmbedding(text, dimensions = 768) {
+export function generateMockEmbedding(text, dimensions = EMBEDDING_DIMENSIONS) {
   // Create hash from text
   const hash = crypto.createHash('sha256').update(text.toLowerCase()).digest();
   
@@ -61,27 +56,6 @@ export function normalizeVector(vector) {
 }
 
 /**
- * Check rate limit and update counter
- */
-function checkRateLimit() {
-  const now = Date.now();
-  
-  // Reset counter every hour
-  if (now > apiCallResetTime) {
-    apiCallCount = 0;
-    apiCallResetTime = now + 3600000;
-  }
-  
-  // Check if we're approaching limit (1500/day = 62.5/hour)
-  if (apiCallCount >= 60) {
-    logger.warn(`Google API rate limit approaching: ${apiCallCount}/60 calls this hour`);
-    return false;
-  }
-  
-  return true;
-}
-
-/**
  * Get embedding from cache
  */
 function getCachedEmbedding(textHash) {
@@ -102,25 +76,15 @@ function cacheEmbedding(textHash, embedding) {
 }
 
 /**
- * Generate embedding using Google Gemini API
+ * Generate embedding using Hugging Face model
  */
 async function generateRealEmbedding(text) {
-  if (!genAI) {
-    logger.debug('Google API not configured, using mock embedding');
+  if (!embedder) {
+    logger.debug('Embedding model not loaded, using fallback');
     return {
       embedding: generateMockEmbedding(text),
       is_mock: true,
-      reason: 'api_not_configured'
-    };
-  }
-  
-  // Check rate limit
-  if (!checkRateLimit()) {
-    logger.warn('Rate limit reached, falling back to mock embedding');
-    return {
-      embedding: generateMockEmbedding(text),
-      is_mock: true,
-      reason: 'rate_limit_exceeded'
+      reason: 'model_not_loaded'
     };
   }
   
@@ -129,7 +93,7 @@ async function generateRealEmbedding(text) {
     const textHash = crypto.createHash('sha256').update(text).digest('hex').substring(0, 16);
     const cached = getCachedEmbedding(textHash);
     if (cached) {
-      logger.info('Embedding retrieved from cache');
+      logger.debug('Embedding retrieved from cache');
       return {
         embedding: cached,
         is_mock: false,
@@ -137,14 +101,13 @@ async function generateRealEmbedding(text) {
       };
     }
     
-    // Generate embedding with Gemini
-    const model = genAI.getGenerativeModel({ model: 'text-embedding-004' });
-    const result = await model.embedContent(text.substring(0, 10000)); // Limit to 10K chars
+    // Generate embedding with Hugging Face
+    const result = await embedder(text.substring(0, 5000), { 
+      pooling: 'mean', 
+      normalize: true 
+    });
     
-    apiCallCount++;
-    logger.info(`Google API call ${apiCallCount}/60 this hour`);
-    
-    const embedding = normalizeVector(result.embedding.values);
+    const embedding = Array.from(result.data);
     
     // Cache the result
     cacheEmbedding(textHash, embedding);
@@ -156,14 +119,14 @@ async function generateRealEmbedding(text) {
     };
     
   } catch (error) {
-    logger.error('Google API embedding generation failed:', error.message);
+    logger.error('Hugging Face embedding generation failed:', error.message);
     
     // Fallback to mock
     logger.warn('Falling back to mock embedding');
     return {
       embedding: generateMockEmbedding(text),
       is_mock: true,
-      reason: 'api_error'
+      reason: 'generation_error'
     };
   }
 }
