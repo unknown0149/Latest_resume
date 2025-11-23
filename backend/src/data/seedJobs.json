@@ -1,0 +1,302 @@
+[
+  {
+    "jobId": "JOB-001",
+    "title": "Senior Java Backend Developer",
+    "company": {
+      "name": "TechCorp Solutions",
+      "logo": "https://example.com/logos/techcorp.png",
+      "website": "https://techcorp.com",
+      "size": "1001-5000"
+    },
+    "location": {
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA",
+      "isRemote": true,
+      "locationType": "hybrid"
+    },
+    "description": "We are seeking an experienced Java Backend Developer to join our core platform team. You will design and build scalable microservices, work with Spring Boot, and collaborate with cross-functional teams.",
+    "responsibilities": [
+      "Design and implement RESTful APIs using Spring Boot",
+      "Build microservices architecture with Kafka and RabbitMQ",
+      "Optimize database queries and performance",
+      "Mentor junior developers and conduct code reviews",
+      "Participate in architecture decisions"
+    ],
+    "requirements": [
+      "5+ years of Java development experience",
+      "Strong knowledge of Spring Boot and Spring Framework",
+      "Experience with microservices architecture",
+      "Proficiency in SQL and NoSQL databases",
+      "Strong problem-solving skills"
+    ],
+    "employmentType": "full-time",
+    "experienceLevel": "senior",
+    "experienceYears": {
+      "min": 5,
+      "max": 10
+    },
+    "salary": {
+      "min": 120000,
+      "max": 160000,
+      "currency": "USD",
+      "period": "annually"
+    },
+    "skills": {
+      "required": ["java", "spring boot", "microservices", "rest api", "sql"],
+      "preferred": ["kafka", "docker", "kubernetes", "redis", "aws", "mongodb", "junit", "git"]
+    },
+    "source": {
+      "platform": "seed",
+      "sourceUrl": "https://example.com/jobs/001",
+      "sourceJobId": "SEED-001"
+    },
+    "postedDate": "2024-01-15T00:00:00Z",
+    "expiresAt": "2024-02-15T00:00:00Z",
+    "status": "active",
+    "views": 0,
+    "applications": 0,
+    "benefits": ["Health Insurance", "401k", "Remote Work", "Learning Budget"],
+    "applicationUrl": "https://techcorp.com/apply/001"
+  },
+  {
+    "jobId": "JOB-002",
+    "title": "Full Stack Developer (React + Node.js)",
+    "company": {
+      "name": "StartupHub Inc",
+      "logo": "https://example.com/logos/startuphub.png",
+      "website": "https://startuphub.io",
+      "size": "51-200"
+    },
+    "location": {
+      "city": "Austin",
+      "state": "TX",
+      "country": "USA",
+      "isRemote": true,
+      "locationType": "remote"
+    },
+    "description": "Join our fast-paced startup as a Full Stack Developer. Build modern web applications using React, Node.js, and TypeScript. Work directly with founders and shape product direction.",
+    "responsibilities": [
+      "Develop responsive UI components with React and TypeScript",
+      "Build scalable APIs using Node.js and Express",
+      "Integrate with PostgreSQL and MongoDB databases",
+      "Implement authentication and authorization",
+      "Deploy applications on AWS"
+    ],
+    "requirements": [
+      "3+ years of full stack development",
+      "Proficiency in React and Node.js",
+      "Experience with TypeScript",
+      "Understanding of RESTful API design",
+      "Version control with Git"
+    ],
+    "employmentType": "full-time",
+    "experienceLevel": "mid",
+    "experienceYears": {
+      "min": 3,
+      "max": 6
+    },
+    "salary": {
+      "min": 90000,
+      "max": 130000,
+      "currency": "USD",
+      "period": "annually"
+    },
+    "skills": {
+      "required": ["react", "node.js", "typescript", "javascript", "rest api"],
+      "preferred": ["postgresql", "mongodb", "aws", "docker", "redux", "express", "tailwind css", "git"]
+    },
+    "source": {
+      "platform": "seed",
+      "sourceUrl": "https://example.com/jobs/002",
+      "sourceJobId": "SEED-002"
+    },
+    "postedDate": "2024-01-16T00:00:00Z",
+    "expiresAt": "2024-02-16T00:00:00Z",
+    "status": "active",
+    "views": 0,
+    "applications": 0,
+    "benefits": ["Equity", "Health Insurance", "Flexible Hours", "Remote Work"],
+    "applicationUrl": "https://startuphub.io/careers/002"
+  },
+  {
+    "jobId": "JOB-003",
+    "title": "Frontend Developer - React Specialist",
+    "company": {
+      "name": "DesignTech Studios",
+      "logo": "https://example.com/logos/designtech.png",
+      "website": "https://designtech.com",
+      "size": "200-500"
+    },
+    "location": {
+      "city": "Seattle",
+      "state": "WA",
+      "country": "USA",
+      "isRemote": false,
+      "locationType": "onsite"
+    },
+    "description": "We're looking for a talented Frontend Developer with deep React expertise. You'll create pixel-perfect, performant user interfaces and work closely with designers.",
+    "responsibilities": [
+      "Build reusable React components and libraries",
+      "Implement responsive designs with CSS-in-JS",
+      "Optimize web performance and accessibility",
+      "Collaborate with UX/UI designers",
+      "Write unit and integration tests"
+    ],
+    "requirements": [
+      "4+ years of React development",
+      "Expert knowledge of JavaScript/ES6+",
+      "Strong CSS and HTML skills",
+      "Experience with state management (Redux/MobX)",
+      "Understanding of web performance optimization"
+    ],
+    "employmentType": "full-time",
+    "experienceLevel": "mid",
+    "experienceYears": {
+      "min": 4,
+      "max": 7
+    },
+    "salary": {
+      "min": 100000,
+      "max": 140000,
+      "currency": "USD",
+      "period": "annually"
+    },
+    "skills": {
+      "required": ["react", "javascript", "html", "css", "redux"],
+      "preferred": ["typescript", "next.js", "tailwind css", "webpack", "jest", "storybook", "figma", "git"]
+    },
+    "source": {
+      "platform": "seed",
+      "sourceUrl": "https://example.com/jobs/003",
+      "sourceJobId": "SEED-003"
+    },
+    "postedDate": "2024-01-14T00:00:00Z",
+    "expiresAt": "2024-02-14T00:00:00Z",
+    "status": "active",
+    "views": 0,
+    "applications": 0,
+    "benefits": ["Health Insurance", "Gym Membership", "Snacks", "Team Events"],
+    "applicationUrl": "https://designtech.com/jobs/003"
+  },
+  {
+    "jobId": "JOB-004",
+    "title": "DevOps Engineer - AWS Specialist",
+    "company": {
+      "name": "CloudNative Systems",
+      "logo": "https://example.com/logos/cloudnative.png",
+      "website": "https://cloudnative.com",
+      "size": "500-1000"
+    },
+    "location": {
+      "city": "Boston",
+      "state": "MA",
+      "country": "USA",
+      "isRemote": true,
+      "locationType": "hybrid"
+    },
+    "description": "Join our DevOps team to build and maintain cloud infrastructure on AWS. Implement CI/CD pipelines, manage Kubernetes clusters, and ensure high availability.",
+    "responsibilities": [
+      "Design and manage AWS infrastructure (EC2, RDS, S3, Lambda)",
+      "Build CI/CD pipelines with Jenkins and GitLab",
+      "Manage Kubernetes clusters and containerized applications",
+      "Implement infrastructure as code with Terraform",
+      "Monitor system performance and optimize costs"
+    ],
+    "requirements": [
+      "5+ years of DevOps experience",
+      "Strong AWS knowledge (certified preferred)",
+      "Experience with Kubernetes and Docker",
+      "Proficiency in scripting (Python/Bash)",
+      "Understanding of networking and security"
+    ],
+    "employmentType": "full-time",
+    "experienceLevel": "senior",
+    "experienceYears": {
+      "min": 5,
+      "max": 10
+    },
+    "salary": {
+      "min": 130000,
+      "max": 170000,
+      "currency": "USD",
+      "period": "annually"
+    },
+    "skills": {
+      "required": ["aws", "kubernetes", "docker", "terraform", "ci/cd"],
+      "preferred": ["jenkins", "python", "bash", "ansible", "prometheus", "grafana", "linux", "git"]
+    },
+    "source": {
+      "platform": "seed",
+      "sourceUrl": "https://example.com/jobs/004",
+      "sourceJobId": "SEED-004"
+    },
+    "postedDate": "2024-01-13T00:00:00Z",
+    "expiresAt": "2024-02-13T00:00:00Z",
+    "status": "active",
+    "views": 0,
+    "applications": 0,
+    "benefits": ["Health Insurance", "401k", "Remote Work", "Certification Budget"],
+    "applicationUrl": "https://cloudnative.com/careers/004"
+  },
+  {
+    "jobId": "JOB-005",
+    "title": "Data Engineer - Big Data Specialist",
+    "company": {
+      "name": "DataFlow Analytics",
+      "logo": "https://example.com/logos/dataflow.png",
+      "website": "https://dataflow.com",
+      "size": "200-500"
+    },
+    "location": {
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "isRemote": false,
+      "locationType": "onsite"
+    },
+    "description": "We're seeking a Data Engineer to build scalable data pipelines and warehouses. Work with Spark, Kafka, and cloud data platforms.",
+    "responsibilities": [
+      "Design and build ETL pipelines using Apache Spark",
+      "Implement real-time data streaming with Kafka",
+      "Manage data warehouses on Snowflake/Redshift",
+      "Optimize SQL queries and data models",
+      "Collaborate with data scientists and analysts"
+    ],
+    "requirements": [
+      "4+ years of data engineering experience",
+      "Strong Python and SQL skills",
+      "Experience with Spark and Kafka",
+      "Knowledge of data warehousing concepts",
+      "Understanding of cloud platforms (AWS/Azure/GCP)"
+    ],
+    "employmentType": "full-time",
+    "experienceLevel": "mid",
+    "experienceYears": {
+      "min": 4,
+      "max": 8
+    },
+    "salary": {
+      "min": 110000,
+      "max": 150000,
+      "currency": "USD",
+      "period": "annually"
+    },
+    "skills": {
+      "required": ["python", "sql", "spark", "kafka", "etl"],
+      "preferred": ["aws", "snowflake", "airflow", "hadoop", "redshift", "scala", "pandas", "git"]
+    },
+    "source": {
+      "platform": "seed",
+      "sourceUrl": "https://example.com/jobs/005",
+      "sourceJobId": "SEED-005"
+    },
+    "postedDate": "2024-01-17T00:00:00Z",
+    "expiresAt": "2024-02-17T00:00:00Z",
+    "status": "active",
+    "views": 0,
+    "applications": 0,
+    "benefits": ["Health Insurance", "401k", "Stock Options", "Learning Budget"],
+    "applicationUrl": "https://dataflow.com/apply/005"
+  }
+]
