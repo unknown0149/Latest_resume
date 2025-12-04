@@ -1,27 +1,16 @@
 /**
  * Embedding Service
- * Generates vector embeddings for resumes and jobs using Hugging Face models
- * Uses @xenova/transformers for local inference
+ * Generates vector embeddings for resumes and jobs using local HuggingFace models
+ * Uses Python transformers via aiRouter service
  */
 
-import { pipeline } from '@xenova/transformers';
+import { generateEmbedding as generateEmbeddingAI } from './aiRouter.js';
 import { logger } from '../utils/logger.js';
 import crypto from 'crypto';
 
-// Initialize Hugging Face embedding model
-let embedder = null;
-const EMBEDDING_MODEL = 'Xenova/all-MiniLM-L6-v2'; // 384 dimensions, fast and accurate
+// Embedding model configuration
+const EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'; // 384 dimensions
 const EMBEDDING_DIMENSIONS = 384;
-
-// Initialize model on startup
-(async () => {
-  try {
-    embedder = await pipeline('feature-extraction', EMBEDDING_MODEL);
-    logger.info(`Hugging Face embedding model loaded: ${EMBEDDING_MODEL}`);
-  } catch (error) {
-    logger.error('Failed to load Hugging Face embedding model:', error.message);
-  }
-})();
 
 // LRU Cache for embeddings (max 1000 entries)
 const embeddingCache = new Map();
@@ -76,18 +65,9 @@ function cacheEmbedding(textHash, embedding) {
 }
 
 /**
- * Generate embedding using Hugging Face model
+ * Generate embedding using local HuggingFace model via Python
  */
 async function generateRealEmbedding(text) {
-  if (!embedder) {
-    logger.debug('Embedding model not loaded, using fallback');
-    return {
-      embedding: generateMockEmbedding(text),
-      is_mock: true,
-      reason: 'model_not_loaded'
-    };
-  }
-  
   try {
     // Check cache first
     const textHash = crypto.createHash('sha256').update(text).digest('hex').substring(0, 16);
@@ -101,32 +81,33 @@ async function generateRealEmbedding(text) {
       };
     }
     
-    // Generate embedding with Hugging Face
-    const result = await embedder(text.substring(0, 5000), { 
-      pooling: 'mean', 
-      normalize: true 
-    });
+    // Call Python embedding service via aiRouter
+    const result = await generateEmbeddingAI(text);
     
-    const embedding = Array.from(result.data);
-    
-    // Cache the result
-    cacheEmbedding(textHash, embedding);
-    
-    return {
-      embedding,
-      is_mock: false,
-      cached: false
-    };
-    
+    if (result.success && result.embedding) {
+      // Cache the embedding
+      cacheEmbedding(textHash, result.embedding);
+      
+      logger.debug(`Generated real embedding (${result.embedding.length} dimensions)`);
+      return {
+        embedding: result.embedding,
+        is_mock: false,
+        cached: false
+      };
+    } else {
+      logger.warn('Embedding generation failed, using fallback');
+      return {
+        embedding: generateMockEmbedding(text),
+        is_mock: true,
+        reason: result.error || 'generation_failed'
+      };
+    }
   } catch (error) {
-    logger.error('Hugging Face embedding generation failed:', error.message);
-    
-    // Fallback to mock
-    logger.warn('Falling back to mock embedding');
+    logger.error('Error generating embedding:', error.message);
     return {
       embedding: generateMockEmbedding(text),
       is_mock: true,
-      reason: 'generation_error'
+      reason: error.message
     };
   }
 }

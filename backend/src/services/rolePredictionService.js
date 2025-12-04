@@ -11,8 +11,8 @@ import { normalizeSkillsArray, matchSkillsFuzzy, isAmbiguousMatch } from '../uti
 import { getAllRoles, calculateRoleMatch, findBestMatchingRoles } from '../data/roleSkillDatabase.js';
 import { logger } from '../utils/logger.js';
 
-// Watson X.ai configuration
-const WATSON_API_KEY = process.env.IBM_API_KEY;
+// Watson X.ai Configuration (Updated credentials)
+const WATSON_API_KEY = process.env.WATSONX_API_KEY || process.env.IBM_API_KEY;
 const WATSON_PROJECT_ID = process.env.IBM_PROJECT_ID;
 const IAM_TOKEN_URL = 'https://iam.cloud.ibm.com/identity/token';
 const WATSON_API_URL = 'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29';

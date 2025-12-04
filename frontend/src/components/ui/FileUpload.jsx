@@ -3,10 +3,16 @@ import { Upload, FileText, X, CheckCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from './Button'
 
-const FileUpload = ({ onFileSelect, accept = '.pdf,.doc,.docx,image/png,image/jpeg,image/jpg', maxSize = 10 }) => {
+const FileUpload = ({ 
+  onFileSelect, 
+  accept = '.pdf,.doc,.docx,image/png,image/jpeg,image/jpg', 
+  maxSize = 10,
+  mode = 'light'
+}) => {
   const [file, setFile] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState(null)
+  const isDark = mode === 'dark'
 
   const validateFile = (file) => {
     const maxSizeBytes = maxSize * 1024 * 1024
@@ -99,8 +105,8 @@ const FileUpload = ({ onFileSelect, accept = '.pdf,.doc,.docx,image/png,image/jp
               relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer
               transition-all duration-300
               ${isDragging 
-                ? 'border-primary-500 bg-primary-50 scale-105' 
-                : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
+                ? (isDark ? 'border-white/60 bg-white/10 scale-105' : 'border-primary-500 bg-primary-50 scale-105')
+                : (isDark ? 'border-white/20 hover:border-white/40 hover:bg-white/5' : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50')
               }
             `}
           >
@@ -114,17 +120,17 @@ const FileUpload = ({ onFileSelect, accept = '.pdf,.doc,.docx,image/png,image/jp
             
             <label htmlFor="file-upload" className="cursor-pointer">
               <div className="mb-4 flex justify-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-primary flex items-center justify-center">
-                  <Upload className="w-10 h-10 text-white" />
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center ${isDark ? 'bg-white/10 ring-1 ring-white/30' : 'bg-gradient-primary'}`}>
+                  <Upload className={`w-10 h-10 ${isDark ? 'text-white' : 'text-white'}`} />
                 </div>
               </div>
               
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              <h3 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 {isDragging ? 'Drop your file here' : 'Drag & Drop Your Resume'}
               </h3>
               
-              <p className="text-gray-600 mb-1">or click to browse</p>
-              <p className="text-sm text-gray-500 mb-6">
+              <p className={`mb-1 ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>or click to browse</p>
+              <p className={`text-sm mb-6 ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>
                 PDF, DOC, DOCX, PNG, JPG (Max {maxSize}MB)
               </p>
               
@@ -138,7 +144,7 @@ const FileUpload = ({ onFileSelect, accept = '.pdf,.doc,.docx,image/png,image/jp
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm"
+                className={`mt-4 p-3 rounded-lg text-sm ${isDark ? 'bg-red-500/10 border border-red-500/40 text-red-200' : 'bg-red-50 border border-red-200 text-red-600'}`}
               >
                 {error}
               </motion.div>
@@ -150,33 +156,33 @@ const FileUpload = ({ onFileSelect, accept = '.pdf,.doc,.docx,image/png,image/jp
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8 border-2 border-green-200"
+            className={`rounded-2xl p-8 border-2 ${isDark ? 'bg-white/5 border-white/15 text-slate-100' : 'bg-gradient-to-br from-green-50 to-blue-50 border-green-200'}`}
           >
             <div className="flex items-start gap-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <FileText className="w-8 h-8 text-blue-600" />
+              <div className={`w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-white/10 text-cyan-300' : 'bg-blue-100'}`}>
+                <FileText className={`w-8 h-8 ${isDark ? 'text-cyan-300' : 'text-blue-600'}`} />
               </div>
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-4 mb-2">
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-lg font-semibold text-gray-900 truncate">
+                    <h4 className={`text-lg font-semibold truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
                       {file.name}
                     </h4>
-                    <p className="text-sm text-gray-600">
+                    <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>
                       {formatFileSize(file.size)}
                     </p>
                   </div>
                   
                   <button
                     onClick={handleRemove}
-                    className="flex-shrink-0 p-2 rounded-lg hover:bg-red-100 text-red-600 transition-colors"
+                    className={`flex-shrink-0 p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/10 text-red-300' : 'hover:bg-red-100 text-red-600'}`}
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
                 
-                <div className="flex items-center gap-2 text-green-600 text-sm font-medium">
+                <div className={`flex items-center gap-2 text-sm font-medium ${isDark ? 'text-emerald-300' : 'text-green-600'}`}>
                   <CheckCircle className="w-4 h-4" />
                   <span>File uploaded successfully</span>
                 </div>

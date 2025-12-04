@@ -146,12 +146,29 @@ const jobSchema = new mongoose.Schema(
     source: {
       platform: {
         type: String,
-        enum: ['linkedin', 'indeed', 'glassdoor', 'direct', 'api', 'manual', 'seed'],
+        enum: ['linkedin', 'indeed', 'glassdoor', 'direct', 'api', 'manual', 'seed', 'real'],
         required: true,
       },
       sourceUrl: String,
       sourceJobId: String,
     },
+    
+    // Application URL - Direct link to apply for job
+    applicationUrl: {
+      type: String,
+      trim: true,
+    },
+    
+    // Benefits
+    benefits: String,
+    
+    // Real-time job specific fields
+    tag: {
+      type: String,
+      enum: ['internship', 'full-time', 'part-time', 'contract', 'freelance', null],
+      index: true,
+    },
+    applicationDeadline: Date,
     
     // Dates & Lifecycle
     postedDate: {
@@ -257,13 +274,33 @@ jobSchema.methods.calculateMatchScore = function (userSkills) {
   const requiredSkills = this.skills.required || [];
   const preferredSkills = this.skills.preferred || [];
   
+  // Helper function for flexible skill matching
+  const hasSkill = (jobSkill, candidateSkills) => {
+    const jobLower = jobSkill.toLowerCase().trim();
+    return candidateSkills.some(candidateSkill => {
+      const candLower = candidateSkill.toLowerCase().trim();
+      // Exact match or partial match
+      if (candLower === jobLower || candLower.includes(jobLower) || jobLower.includes(candLower)) {
+        return true;
+      }
+      // Common variations
+      if ((jobLower === 'javascript' && candLower === 'js') || (jobLower === 'js' && candLower === 'javascript')) return true;
+      if ((jobLower === 'typescript' && candLower === 'ts') || (jobLower === 'ts' && candLower === 'typescript')) return true;
+      if ((jobLower === 'postgresql' && candLower === 'postgres') || (jobLower === 'postgres' && candLower === 'postgresql')) return true;
+      if ((jobLower === 'reactjs' && candLower === 'react') || (jobLower === 'react' && candLower === 'reactjs')) return true;
+      if ((jobLower === 'nodejs' && (candLower === 'node.js' || candLower === 'node')) || 
+          ((candLower === 'nodejs' || candLower === 'node.js') && jobLower === 'node')) return true;
+      return false;
+    });
+  };
+  
   // Weight required skills more heavily (70%) vs preferred (30%)
   const requiredMatches = requiredSkills.filter(skill => 
-    normalizedUserSkills.includes(skill.toLowerCase())
+    hasSkill(skill, normalizedUserSkills)
   ).length;
   
   const preferredMatches = preferredSkills.filter(skill => 
-    normalizedUserSkills.includes(skill.toLowerCase())
+    hasSkill(skill, normalizedUserSkills)
   ).length;
   
   const requiredScore = requiredSkills.length > 0 
@@ -281,12 +318,32 @@ jobSchema.methods.calculateMatchScore = function (userSkills) {
 jobSchema.methods.getSkillBreakdown = function (userSkills) {
   const normalizedUserSkills = userSkills.map(s => s.toLowerCase().trim());
   
+  // Helper function for flexible skill matching
+  const hasSkill = (jobSkill, candidateSkills) => {
+    const jobLower = jobSkill.toLowerCase().trim();
+    return candidateSkills.some(candidateSkill => {
+      const candLower = candidateSkill;
+      // Exact match or partial match
+      if (candLower === jobLower || candLower.includes(jobLower) || jobLower.includes(candLower)) {
+        return true;
+      }
+      // Common variations
+      if ((jobLower === 'javascript' && candLower === 'js') || (jobLower === 'js' && candLower === 'javascript')) return true;
+      if ((jobLower === 'typescript' && candLower === 'ts') || (jobLower === 'ts' && candLower === 'typescript')) return true;
+      if ((jobLower === 'postgresql' && candLower === 'postgres') || (jobLower === 'postgres' && candLower === 'postgresql')) return true;
+      if ((jobLower === 'reactjs' && candLower === 'react') || (jobLower === 'react' && candLower === 'reactjs')) return true;
+      if ((jobLower === 'nodejs' && (candLower === 'node.js' || candLower === 'node')) || 
+          ((candLower === 'nodejs' || candLower === 'node.js') && jobLower === 'node')) return true;
+      return false;
+    });
+  };
+  
   const matched = this.skills.allSkills.filter(skill => 
-    normalizedUserSkills.includes(skill)
+    hasSkill(skill, normalizedUserSkills)
   );
   
   const missing = this.skills.allSkills.filter(skill => 
-    !normalizedUserSkills.includes(skill)
+    !hasSkill(skill, normalizedUserSkills)
   );
   
   return { matched, missing };
@@ -314,18 +371,52 @@ jobSchema.statics.findMatchingJobs = async function (userSkills, options = {}) {
     experienceLevel = null,
     isRemote = null,
     employmentType = null,
+    sourcePlatforms = null,
   } = options;
   
-  // Build query
+  // Normalize user skills with variations
+  const normalizedUserSkills = userSkills.map(s => s.toLowerCase().trim());
+  const skillVariations = new Set(normalizedUserSkills);
+  
+  // Add common variations
+  normalizedUserSkills.forEach(skill => {
+    if (skill === 'javascript' || skill === 'js') {
+      skillVariations.add('javascript');
+      skillVariations.add('js');
+    } else if (skill === 'typescript' || skill === 'ts') {
+      skillVariations.add('typescript');
+      skillVariations.add('ts');
+    } else if (skill === 'postgresql' || skill === 'postgres') {
+      skillVariations.add('postgresql');
+      skillVariations.add('postgres');
+    } else if (skill === 'reactjs' || skill === 'react') {
+      skillVariations.add('reactjs');
+      skillVariations.add('react');
+    } else if (skill === 'nodejs' || skill === 'node.js' || skill === 'node') {
+      skillVariations.add('nodejs');
+      skillVariations.add('node.js');
+      skillVariations.add('node');
+    }
+  });
+  
+  // Build query with more flexible matching
   const query = {
     status: 'active',
     expiresAt: { $gt: new Date() },
-    'skills.allSkills': { $in: userSkills.map(s => s.toLowerCase()) }
+    $or: [
+      { 'skills.allSkills': { $in: Array.from(skillVariations) } },
+      // Also match if ANY required/preferred skills overlap
+      { 'skills.required': { $in: Array.from(skillVariations) } },
+      { 'skills.preferred': { $in: Array.from(skillVariations) } }
+    ]
   };
   
   if (experienceLevel) query.experienceLevel = experienceLevel;
   if (isRemote !== null) query['location.isRemote'] = isRemote;
   if (employmentType) query.employmentType = employmentType;
+  if (Array.isArray(sourcePlatforms) && sourcePlatforms.length > 0) {
+    query['source.platform'] = { $in: sourcePlatforms };
+  }
   
   const activeJobs = await this.find(query)
     .sort({ postedDate: -1 })

@@ -10,8 +10,7 @@ export const salaryBoostSkills = [
     skill: 'AWS',
     impact: {
       percentage: '20-30%',
-      absoluteUSD: { min: 15000, max: 40000 },
-      absoluteINR: { min: 200000, max: 400000 }, // ₹2-4 LPA
+      absoluteUSD: { min: 15000, max: 40000 }
     },
     demandLevel: 'Very High',
     category: 'Cloud',
@@ -21,8 +20,7 @@ export const salaryBoostSkills = [
     skill: 'Kubernetes',
     impact: {
       percentage: '25-35%',
-      absoluteUSD: { min: 20000, max: 50000 },
-      absoluteINR: { min: 250000, max: 500000 },
+      absoluteUSD: { min: 20000, max: 50000 }
     },
     demandLevel: 'Very High',
     category: 'DevOps',
@@ -32,8 +30,7 @@ export const salaryBoostSkills = [
     skill: 'Terraform',
     impact: {
       percentage: '20-25%',
-      absoluteUSD: { min: 15000, max: 35000 },
-      absoluteINR: { min: 200000, max: 350000 },
+      absoluteUSD: { min: 15000, max: 35000 }
     },
     demandLevel: 'High',
     category: 'DevOps',
@@ -45,8 +42,7 @@ export const salaryBoostSkills = [
     skill: 'Microservices',
     impact: {
       percentage: '30-40%',
-      absoluteUSD: { min: 25000, max: 60000 },
-      absoluteINR: { min: 300000, max: 600000 }, // ₹3-6 LPA
+      absoluteUSD: { min: 25000, max: 60000 }
     },
     demandLevel: 'Very High',
     category: 'Architecture',
@@ -56,8 +52,7 @@ export const salaryBoostSkills = [
     skill: 'System Design',
     impact: {
       percentage: '35-45%',
-      absoluteUSD: { min: 30000, max: 70000 },
-      absoluteINR: { min: 400000, max: 700000 },
+      absoluteUSD: { min: 30000, max: 70000 }
     },
     demandLevel: 'Very High',
     category: 'Architecture',
@@ -69,8 +64,7 @@ export const salaryBoostSkills = [
     skill: 'Machine Learning',
     impact: {
       percentage: '40-50%',
-      absoluteUSD: { min: 35000, max: 80000 },
-      absoluteINR: { min: 500000, max: 800000 },
+      absoluteUSD: { min: 35000, max: 80000 }
     },
     demandLevel: 'Very High',
     category: 'AI/ML',
@@ -80,8 +74,7 @@ export const salaryBoostSkills = [
     skill: 'Deep Learning',
     impact: {
       percentage: '45-55%',
-      absoluteUSD: { min: 40000, max: 90000 },
-      absoluteINR: { min: 600000, max: 1000000 },
+      absoluteUSD: { min: 40000, max: 90000 }
     },
     demandLevel: 'Very High',
     category: 'AI/ML',
@@ -91,8 +84,7 @@ export const salaryBoostSkills = [
     skill: 'TensorFlow',
     impact: {
       percentage: '35-45%',
-      absoluteUSD: { min: 30000, max: 70000 },
-      absoluteINR: { min: 400000, max: 700000 },
+      absoluteUSD: { min: 30000, max: 70000 }
     },
     demandLevel: 'High',
     category: 'AI/ML',
@@ -102,8 +94,7 @@ export const salaryBoostSkills = [
     skill: 'PyTorch',
     impact: {
       percentage: '35-45%',
-      absoluteUSD: { min: 30000, max: 70000 },
-      absoluteINR: { min: 400000, max: 700000 },
+      absoluteUSD: { min: 30000, max: 70000 }
     },
     demandLevel: 'High',
     category: 'AI/ML',
@@ -115,8 +106,7 @@ export const salaryBoostSkills = [
     skill: 'Docker',
     impact: {
       percentage: '15-20%',
-      absoluteUSD: { min: 10000, max: 25000 },
-      absoluteINR: { min: 150000, max: 300000 },
+      absoluteUSD: { min: 10000, max: 25000 }
     },
     demandLevel: 'High',
     category: 'DevOps',
@@ -126,8 +116,7 @@ export const salaryBoostSkills = [
     skill: 'CI/CD',
     impact: {
       percentage: '18-25%',
-      absoluteUSD: { min: 12000, max: 30000 },
-      absoluteINR: { min: 180000, max: 350000 },
+      absoluteUSD: { min: 12000, max: 30000 }
     },
     demandLevel: 'High',
     category: 'DevOps',
@@ -139,8 +128,7 @@ export const salaryBoostSkills = [
     skill: 'Azure',
     impact: {
       percentage: '18-28%',
-      absoluteUSD: { min: 13000, max: 35000 },
-      absoluteINR: { min: 180000, max: 380000 },
+      absoluteUSD: { min: 13000, max: 35000 }
     },
     demandLevel: 'High',
     category: 'Cloud',
@@ -150,8 +138,7 @@ export const salaryBoostSkills = [
     skill: 'GCP',
     impact: {
       percentage: '18-25%',
-      absoluteUSD: { min: 12000, max: 32000 },
-      absoluteINR: { min: 170000, max: 360000 },
+      absoluteUSD: { min: 12000, max: 32000 }
     },
     demandLevel: 'Medium-High',
     category: 'Cloud',
@@ -163,8 +150,7 @@ export const salaryBoostSkills = [
     skill: 'Spring Boot',
     impact: {
       percentage: '15-22%',
-      absoluteUSD: { min: 10000, max: 28000 },
-      absoluteINR: { min: 150000, max: 320000 },
+      absoluteUSD: { min: 10000, max: 28000 }
     },
     demandLevel: 'High',
     category: 'Backend',
@@ -174,8 +160,7 @@ export const salaryBoostSkills = [
     skill: 'Node.js',
     impact: {
       percentage: '12-18%',
-      absoluteUSD: { min: 8000, max: 22000 },
-      absoluteINR: { min: 120000, max: 280000 },
+      absoluteUSD: { min: 8000, max: 22000 }
     },
     demandLevel: 'High',
     category: 'Backend',
@@ -187,8 +172,7 @@ export const salaryBoostSkills = [
     skill: 'React',
     impact: {
       percentage: '10-15%',
-      absoluteUSD: { min: 7000, max: 18000 },
-      absoluteINR: { min: 100000, max: 220000 },
+      absoluteUSD: { min: 7000, max: 18000 }
     },
     demandLevel: 'Very High',
     category: 'Frontend',
@@ -198,8 +182,7 @@ export const salaryBoostSkills = [
     skill: 'TypeScript',
     impact: {
       percentage: '12-18%',
-      absoluteUSD: { min: 8000, max: 22000 },
-      absoluteINR: { min: 120000, max: 280000 },
+      absoluteUSD: { min: 8000, max: 22000 }
     },
     demandLevel: 'High',
     category: 'Frontend',
@@ -209,8 +192,7 @@ export const salaryBoostSkills = [
     skill: 'Next.js',
     impact: {
       percentage: '15-20%',
-      absoluteUSD: { min: 10000, max: 25000 },
-      absoluteINR: { min: 150000, max: 300000 },
+      absoluteUSD: { min: 10000, max: 25000 }
     },
     demandLevel: 'Medium-High',
     category: 'Frontend',
@@ -222,8 +204,7 @@ export const salaryBoostSkills = [
     skill: 'React Native',
     impact: {
       percentage: '18-25%',
-      absoluteUSD: { min: 12000, max: 30000 },
-      absoluteINR: { min: 180000, max: 350000 },
+      absoluteUSD: { min: 12000, max: 30000 }
     },
     demandLevel: 'High',
     category: 'Mobile',
@@ -233,8 +214,7 @@ export const salaryBoostSkills = [
     skill: 'Flutter',
     impact: {
       percentage: '18-25%',
-      absoluteUSD: { min: 12000, max: 30000 },
-      absoluteINR: { min: 180000, max: 350000 },
+      absoluteUSD: { min: 12000, max: 30000 }
     },
     demandLevel: 'Medium-High',
     category: 'Mobile',
@@ -246,8 +226,7 @@ export const salaryBoostSkills = [
     skill: 'PostgreSQL',
     impact: {
       percentage: '10-15%',
-      absoluteUSD: { min: 7000, max: 18000 },
-      absoluteINR: { min: 100000, max: 220000 },
+      absoluteUSD: { min: 7000, max: 18000 }
     },
     demandLevel: 'High',
     category: 'Database',
@@ -257,8 +236,7 @@ export const salaryBoostSkills = [
     skill: 'MongoDB',
     impact: {
       percentage: '12-18%',
-      absoluteUSD: { min: 8000, max: 22000 },
-      absoluteINR: { min: 120000, max: 280000 },
+      absoluteUSD: { min: 8000, max: 22000 }
     },
     demandLevel: 'High',
     category: 'Database',
@@ -268,8 +246,7 @@ export const salaryBoostSkills = [
     skill: 'Redis',
     impact: {
       percentage: '15-20%',
-      absoluteUSD: { min: 10000, max: 25000 },
-      absoluteINR: { min: 150000, max: 300000 },
+      absoluteUSD: { min: 10000, max: 25000 }
     },
     demandLevel: 'Medium-High',
     category: 'Database',
@@ -281,8 +258,7 @@ export const salaryBoostSkills = [
     skill: 'Apache Spark',
     impact: {
       percentage: '30-40%',
-      absoluteUSD: { min: 25000, max: 60000 },
-      absoluteINR: { min: 300000, max: 600000 },
+      absoluteUSD: { min: 25000, max: 60000 }
     },
     demandLevel: 'Medium-High',
     category: 'Big Data',
@@ -292,8 +268,7 @@ export const salaryBoostSkills = [
     skill: 'Kafka',
     impact: {
       percentage: '25-35%',
-      absoluteUSD: { min: 20000, max: 50000 },
-      absoluteINR: { min: 250000, max: 500000 },
+      absoluteUSD: { min: 20000, max: 50000 }
     },
     demandLevel: 'High',
     category: 'Big Data',
@@ -305,8 +280,7 @@ export const salaryBoostSkills = [
     skill: 'Security',
     impact: {
       percentage: '25-35%',
-      absoluteUSD: { min: 20000, max: 50000 },
-      absoluteINR: { min: 250000, max: 500000 },
+      absoluteUSD: { min: 20000, max: 50000 }
     },
     demandLevel: 'Very High',
     category: 'Security',
@@ -351,7 +325,7 @@ export const getTopSalaryBoostOpportunities = (missingSkills, limit = 5) => {
  * Calculate potential salary increase
  * @param {number} currentSalary - Current salary
  * @param {string[]} skillsToLearn - Skills to learn
- * @param {string} currency - 'USD' or 'INR'
+ * @param {string} currency - Preferred currency code (defaults to USD; falls back to USD when unavailable)
  * @returns {Object} - Estimated increase info
  */
 export const calculatePotentialIncrease = (currentSalary, skillsToLearn, currency = 'USD') => {
@@ -359,6 +333,7 @@ export const calculatePotentialIncrease = (currentSalary, skillsToLearn, currenc
   let totalPercentageMax = 0;
   let totalAbsoluteMin = 0;
   let totalAbsoluteMax = 0;
+  const requestedCurrency = (currency || 'USD').toUpperCase();
   
   const boosts = skillsToLearn.map(skill => getSalaryBoostForSkill(skill)).filter(b => b);
   
@@ -371,10 +346,10 @@ export const calculatePotentialIncrease = (currentSalary, skillsToLearn, currenc
     }
     
     // Add absolute values
-    const currencyKey = currency.toUpperCase();
-    if (boost.impact[`absolute${currencyKey}`]) {
-      totalAbsoluteMin += boost.impact[`absolute${currencyKey}`].min;
-      totalAbsoluteMax += boost.impact[`absolute${currencyKey}`].max;
+    const absoluteRange = boost.impact[`absolute${requestedCurrency}`] || boost.impact.absoluteUSD;
+    if (absoluteRange) {
+      totalAbsoluteMin += absoluteRange.min;
+      totalAbsoluteMax += absoluteRange.max;
     }
   }
   
@@ -394,7 +369,9 @@ export const calculatePotentialIncrease = (currentSalary, skillsToLearn, currenc
   
   return {
     currentSalary,
-    currency,
+    currency: boosts.every(boost => boost.impact[`absolute${requestedCurrency}`])
+      ? requestedCurrency
+      : 'USD',
     percentageRange: `${percentageMin}-${percentageMax}%`,
     estimatedIncrease,
     newSalaryRange: {

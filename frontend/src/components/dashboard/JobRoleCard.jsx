@@ -1,18 +1,31 @@
-import { TrendingUp, Briefcase, MapPin, DollarSign } from 'lucide-react'
+import { TrendingUp, Briefcase, MapPin, DollarSign, ExternalLink } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Card from '../ui/Card'
+import Button from '../ui/Button'
 
 const JobRoleCard = ({ role, index, onClick }) => {
   // Handle both job match format and role format
   const job = role.job || role;
   const matchScore = role.matchScore || role.matchPercentage || 0;
-  const title = job.title;
+  const title = job.title || role.title;
   const company = job.company?.name || job.company;
   const location = `${job.location?.city || ''}, ${job.location?.state || ''}`.trim().replace(/^,\s*/, '') || job.location;
   const description = job.description;
-  const salary = job.salary ? `$${job.salary.min?.toLocaleString()}-$${job.salary.max?.toLocaleString()}` : job.salary;
+  
+  // Format salary with currency symbol
+  const formatSalary = (salaryObj) => {
+    if (!salaryObj) return null;
+    const currency = salaryObj.currency || 'INR';
+    const symbol = currency === 'INR' ? '₹' : '$';
+    const min = salaryObj.min?.toLocaleString('en-IN');
+    const max = salaryObj.max?.toLocaleString('en-IN');
+    return `${symbol}${min}-${symbol}${max}`;
+  };
+  
+  const salary = formatSalary(job.salary);
   const matchedSkills = role.matchedSkills || job.matchedSkills || [];
   const missingSkills = role.missingSkills || job.missingSkills || [];
+  const applicationUrl = job.applicationUrl || role.applicationUrl;
   
   const getMatchColor = (percentage) => {
     if (percentage >= 90) return 'text-green-600 bg-green-100'
@@ -68,7 +81,7 @@ const JobRoleCard = ({ role, index, onClick }) => {
         )}
 
         {/* Skills */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mb-4">
           {matchedSkills.slice(0, 3).map((skill, idx) => (
             <span 
               key={idx}
@@ -83,6 +96,20 @@ const JobRoleCard = ({ role, index, onClick }) => {
             </span>
           )}
         </div>
+
+        {/* Apply Button */}
+        {applicationUrl && (
+          <Button
+            className="w-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(applicationUrl, '_blank', 'noopener,noreferrer');
+            }}
+          >
+            Apply to Job
+            <ExternalLink className="w-4 h-4 ml-2" />
+          </Button>
+        )}
       </Card>
     </motion.div>
   )

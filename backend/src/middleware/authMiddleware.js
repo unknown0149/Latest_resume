@@ -32,6 +32,11 @@ export const authenticateToken = (req, res, next) => {
 }
 
 /**
+ * Alias for authenticateToken - optional authentication
+ */
+export const optionalAuth = authenticateToken;
+
+/**
  * Middleware to require authentication (strict mode)
  * Use this when authentication is mandatory
  */

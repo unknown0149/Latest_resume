@@ -3,7 +3,7 @@ import axios from 'axios'
 // Create axios instance
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
-  timeout: 30000,
+  timeout: 120000, // 120 seconds for resume processing (NER can take 30-45s)
   headers: {
     'Content-Type': 'application/json',
   },
@@ -159,6 +159,87 @@ export const resumeAPI = {
     const response = await api.post('/analysis/salary-boost', { resumeId, roleId })
     return response.data
   },
+
+  // Import jobs from JSON file (admin)
+  importJobsJSON: async (filePath) => {
+    const response = await api.post('/admin/import-jobs-json', { filePath })
+    return response.data
+  },
+
+  // Import jobs from CSV file (admin)
+  importJobsCSV: async (filePath) => {
+    const response = await api.post('/admin/import-jobs-csv', { filePath })
+    return response.data
+  },
+
+  // List jobs with filters and pagination
+  listJobs: async (params = {}) => {
+    const queryParams = new URLSearchParams(params)
+    const response = await api.get(`/jobs/list?${queryParams}`)
+    return response.data
+  },
+
+  // Generate MCQ questions for skill verification
+  generateMCQQuestions: async (skill, count = 5) => {
+    const response = await api.post('/resume/generate-mcq', { skill, count })
+    return response.data
+  },
+
+  // Save skill verification result
+  saveSkillVerification: async (resumeId, skill, score, correct, total) => {
+    const response = await api.post(`/resume/${resumeId}/verify-skill`, {
+      skill,
+      score,
+      correct,
+      total,
+      timestamp: new Date().toISOString()
+    })
+    return response.data
+  },
+
+  // Generate learning resources for skills
+  generateResources: async (skills, limit = 10) => {
+    const response = await api.post('/resume/generate-resources', { skills, limit })
+    return response.data
+  },
+}
+
+// Interview API functions
+export const interviewAPI = {
+  // Generate interview questions
+  generateInterview: async (resumeId, skills, options = {}) => {
+    const response = await api.post('/interview/generate', {
+      resumeId,
+      skills,
+      ...options
+    })
+    return response.data
+  },
+
+  // Submit interview answers
+  submitInterview: async (sessionId, answers) => {
+    const response = await api.post('/interview/submit', {
+      sessionId,
+      answers
+    })
+    return response.data
+  },
+
+  // Get verification status
+  getVerificationStatus: async (resumeId) => {
+    const response = await api.get(`/interview/status/${resumeId}`)
+    return response.data
+  },
+
+  // Generate job-specific interview
+  generateJobInterview: async (resumeId, jobId, options = {}) => {
+    const response = await api.post('/interview/job-apply', {
+      resumeId,
+      jobId,
+      ...options
+    })
+    return response.data
+  }
 }
 
 export default api

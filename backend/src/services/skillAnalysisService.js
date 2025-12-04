@@ -100,11 +100,19 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
     const requiredMatch = matchSkillsFuzzy(roleData.requiredSkills, normalizedSkills);
     const preferredMatch = matchSkillsFuzzy(roleData.preferredSkills, normalizedSkills);
     
-    // Combine all matched and missing skills
-    const skillsHave = [
-      ...requiredMatch.matched.map(s => ({ skill: s, type: 'required', level: estimateSkillLevel(s, resumeText, normalizedSkills) })),
-      ...preferredMatch.matched.map(s => ({ skill: s, type: 'preferred', level: estimateSkillLevel(s, resumeText, normalizedSkills) })),
-    ];
+    // Skills you have (ALL resume skills, with indication if they match role)
+    const skillsHave = normalizedSkills.map(skill => {
+      const matchesRequired = requiredMatch.matched.some(s => s.toLowerCase() === skill.toLowerCase());
+      const matchesPreferred = preferredMatch.matched.some(s => s.toLowerCase() === skill.toLowerCase());
+      
+      return {
+        skill: skill,
+        type: matchesRequired ? 'required' : matchesPreferred ? 'preferred' : 'additional',
+        level: estimateSkillLevel(skill, resumeText, normalizedSkills),
+        matchesRole: matchesRequired || matchesPreferred,
+        proficiency: matchesRequired ? 80 : matchesPreferred ? 70 : 60 // Estimate proficiency
+      };
+    });
     
     // Get top salary boost opportunities (filter for missing skills)
     const salaryBoostData = getTopSalaryBoostOpportunities(10);
@@ -125,7 +133,6 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
         salaryBoost: boostData ? {
           percentage: boostData.impact.percentage,
           absoluteUSD: boostData.impact.absoluteUSD,
-          absoluteINR: boostData.impact.absoluteINR,
         } : null,
       });
     }
@@ -143,7 +150,6 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
         salaryBoost: boostData ? {
           percentage: boostData.impact.percentage,
           absoluteUSD: boostData.impact.absoluteUSD,
-          absoluteINR: boostData.impact.absoluteINR,
         } : null,
       });
     }
@@ -168,12 +174,13 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
         salaryRange: roleData.salaryRange,
       },
       skillsSummary: {
-        totalHave: skillsHave.length,
+        totalHave: skillsHave.length, // Total resume skills
         totalMissing: skillsMissing.length,
-        requiredHave: requiredMatch.matched.length,
+        requiredHave: skillsHave.filter(s => s.type === 'required').length,
         requiredMissing: requiredMatch.missing.length,
-        preferredHave: preferredMatch.matched.length,
+        preferredHave: skillsHave.filter(s => s.type === 'preferred').length,
         preferredMissing: preferredMatch.missing.length,
+        additionalSkills: skillsHave.filter(s => s.type === 'additional').length,
         completeness: ((requiredMatch.matched.length / roleData.requiredSkills.length) * 100).toFixed(1),
       },
       skillsHave: skillsHave,
@@ -188,7 +195,6 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
             impact: s.salaryBoost.percentage,
             potentialIncrease: {
               USD: s.salaryBoost.absoluteUSD,
-              INR: s.salaryBoost.absoluteINR,
             },
           })),
         totalPotentialIncrease: potentialIncrease,

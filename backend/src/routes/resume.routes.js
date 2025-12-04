@@ -3,10 +3,46 @@ import { v4 as uuidv4 } from 'uuid'
 import upload, { handleUploadError } from '../middleware/uploadMiddleware.js'
 import { authenticateToken } from '../middleware/authMiddleware.js'
 import { extractText, parseResume, quickParse, deepParse } from '../services/resumeProcessingService.js'
+import { predictBestRole, analyzeSkills, generateSalaryBoostRecommendations, alignSkillsWithCareerAdvice } from '../services/intelligentJobMatchingService.js'
+import { generateRoadmap } from '../services/roadmapService.js'
+import { generateResumeSummaryWithWatson } from '../services/watsonResumeSummaryService.js'
 import Resume from '../models/Resume.js'
 import { logger, createLogger } from '../utils/logger.js'
 import { queueResumeEmbedding } from '../services/embeddingQueueService.js'
 import fs from 'fs/promises'
+
+const BADGE_META = {
+  gold: { label: 'Gold Badge', color: '#fbbf24', icon: '🥇' },
+  silver: { label: 'Silver Badge', color: '#d1d5db', icon: '🥈' },
+  bronze: { label: 'Brown Badge', color: '#fb923c', icon: '🥉' },
+  none: { label: 'Needs Practice', color: '#94a3b8', icon: '🎯' }
+}
+
+function determineSkillBadge(score) {
+  if (typeof score !== 'number') {
+    return { level: 'none', ...BADGE_META.none }
+  }
+
+  if (score >= 85) {
+    return { level: 'gold', ...BADGE_META.gold }
+  }
+  if (score >= 70) {
+    return { level: 'silver', ...BADGE_META.silver }
+  }
+  if (score >= 50) {
+    return { level: 'bronze', ...BADGE_META.bronze }
+  }
+
+  return { level: 'none', ...BADGE_META.none }
+}
+
+function deriveTrustLevel(score) {
+  if (score >= 85) return 'excellent'
+  if (score >= 70) return 'good'
+  if (score >= 50) return 'moderate'
+  if (score > 0) return 'low'
+  return 'unverified'
+}
 
 // ═══════════════════════════════════════════════════════════════════════
 // RESUME UPLOAD & PARSING ROUTES (Using Unified Service)
@@ -373,6 +409,658 @@ router.get('/:resumeId/parsed', async (req, res) => {
     res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve parsed resume',
+      statusCode: 500,
+    })
+  }
+})
+
+/**
+ * POST /api/resume/:resumeId/analyze-role
+ * Analyze resume and predict best job role with skill gaps and roadmap
+ */
+router.post('/:resumeId/analyze-role', async (req, res) => {
+  const traceId = uuidv4()
+  const requestLogger = createLogger({ traceId })
+
+  try {
+    const { resumeId } = req.params
+
+    requestLogger.info(`Analyzing role for resume ${resumeId}`)
+
+    // Fetch resume from database
+    const resume = await Resume.findOne({ resumeId })
+
+    if (!resume) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Resume not found',
+        statusCode: 404,
+      })
+    }
+
+    if (!resume.parsed_resume) {
+      return res.status(400).json({
+        error: 'Invalid resume',
+        message: 'Resume must be parsed first. Call POST /api/resume/:resumeId/parse',
+        statusCode: 400,
+      })
+    }
+
+    // Step 1: Predict best role (with timeout)
+    requestLogger.info('Predicting best job role...')
+    const rolePrediction = await predictBestRole(resume)
+    const primaryRole = rolePrediction.primaryRole.name
+
+    // Step 2: Analyze skills once and reuse across downstream steps
+    requestLogger.info(`Running skill gap analysis for ${primaryRole}`)
+    const skillAnalysis = await analyzeSkills(resume, primaryRole)
+
+    // Step 3: Generate salary boost recommendations using enriched skill analysis
+    const salaryBoost = generateSalaryBoostRecommendations(
+      skillAnalysis.skillsMissing,
+      skillAnalysis.skillsHave,
+      resume.parsed_resume?.years_experience || 0
+    )
+
+    // Step 4: Generate Watson-powered summary (parallel friendly but needs skill analysis)
+    requestLogger.info('Generating comprehensive resume summary with Watson...')
+    const watsonSummary = await generateResumeSummaryWithWatson(resume, rolePrediction.primaryRole, skillAnalysis)
+    const careerAlignment = alignSkillsWithCareerAdvice(skillAnalysis, watsonSummary)
+
+    // Step 5: Generate roadmap informed by alignment plan
+    const roadmap = generateRoadmap(
+      skillAnalysis.skillsMissing,
+      skillAnalysis.skillsHave,
+      primaryRole,
+      {
+        alignedRecommendations: skillAnalysis.alignedRecommendations,
+        careerPlan: careerAlignment.plan,
+        strengths: careerAlignment.insights?.strengthsToLeverage,
+        watsonAdvice: careerAlignment.insights?.watsonAdvice,
+      }
+    )
+
+    // Step 6: Generate resources for top missing skills
+    const topMissingSkills = skillAnalysis.skillsMissing.slice(0, 3).map(s => s.skill)
+    const resources = topMissingSkills.length > 0 ? generateFallbackResources(topMissingSkills) : []
+
+    // Return comprehensive analysis
+    requestLogger.info(`Role analysis complete for resume ${resumeId}`)
+
+    res.json({
+      success: true,
+      resumeId: resume.resumeId,
+      data: {
+        rolePrediction: {
+          primaryRole: rolePrediction.primaryRole,
+          alternativeRoles: rolePrediction.alternativeRoles,
+          watsonUsed: rolePrediction.watsonUsed
+        },
+        skillAnalysis: {
+          skillsHave: skillAnalysis.skillsHave,
+          skillsMissing: skillAnalysis.skillsMissing,
+          alignedRecommendations: skillAnalysis.alignedRecommendations || [],
+          careerAlignedPlan: careerAlignment.plan,
+          careerAdviceInsights: careerAlignment.insights,
+          skillGapSummary: skillAnalysis.skillGapSummary,
+          salaryBoostOpportunities: skillAnalysis.salaryBoostOpportunities || []
+        },
+        recommendations: salaryBoost,
+        roadmap: roadmap,
+        resources: resources,
+        watsonSummary: watsonSummary
+      }
+    })
+
+function generateFallbackResources(skills, limit = 10) {
+  const resources = []
+  skills.forEach(skill => {
+    resources.push(
+      {
+        skill,
+        title: `${skill} - Official Documentation`,
+        type: 'Documentation',
+        provider: 'Official Docs',
+        url: `https://www.google.com/search?q=${encodeURIComponent(skill)}+official+documentation`,
+        description: `Comprehensive official documentation for ${skill}`,
+        level: 'Beginner',
+        duration: 'Self-paced',
+        price: 'Free',
+        rating: '4.5',
+        skills: [skill]
+      },
+      {
+        skill,
+        title: `Learn ${skill} - Complete Course`,
+        type: 'Course',
+        provider: 'Udemy',
+        url: `https://www.udemy.com/courses/search/?q=${encodeURIComponent(skill)}`,
+        description: `Complete course covering ${skill} fundamentals and advanced concepts`,
+        level: 'Intermediate',
+        duration: '20-40 hours',
+        price: '$49',
+        rating: '4.6',
+        skills: [skill]
+      },
+      {
+        skill,
+        title: `${skill} Tutorial - Video Series`,
+        type: 'Video',
+        provider: 'YouTube',
+        url: `https://www.youtube.com/results?search_query=${encodeURIComponent(skill)}+tutorial`,
+        description: `Free video tutorials for learning ${skill} from scratch`,
+        level: 'Beginner',
+        duration: '2-5 hours',
+        price: 'Free',
+        rating: '4.3',
+        skills: [skill]
+      }
+    )
+  })
+  return resources.slice(0, limit)
+}
+
+  } catch (error) {
+    requestLogger.error(`Role analysis failed for resume ${req.params.resumeId}:`, error)
+    res.status(500).json({
+      error: 'Analysis failed',
+      message: error.message,
+      statusCode: 500,
+    })
+  }
+})
+
+// ═══════════════════════════════════════════════════════════════════════
+// PROFILE CUSTOMIZATION ROUTES
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * POST /api/resume/:resumeId/profile/photo
+ * Upload profile photo
+ */
+router.post(
+  '/:resumeId/profile/photo',
+  authenticateToken,
+  upload.single('photo'),
+  handleUploadError,
+  async (req, res) => {
+    try {
+      const { resumeId } = req.params
+      
+      if (!req.file) {
+        return res.status(400).json({
+          error: 'No photo uploaded',
+          message: 'Please provide a photo file',
+          statusCode: 400,
+        })
+      }
+
+      // Find resume
+      const resume = await Resume.findOne({ resumeId, isActive: true })
+      if (!resume) {
+        // Clean up uploaded file
+        await fs.unlink(req.file.path).catch(() => {})
+        return res.status(404).json({
+          error: 'Resume not found',
+          statusCode: 404,
+        })
+      }
+
+      // Delete old photo if exists
+      if (resume.profile?.photoUrl) {
+        const oldPhotoPath = resume.profile.photoUrl.replace('/uploads/', 'uploads/')
+        await fs.unlink(oldPhotoPath).catch(() => {})
+      }
+
+      // Save new photo URL
+      const photoUrl = `/uploads/${req.file.filename}`
+      
+      if (!resume.profile) {
+        resume.profile = {}
+      }
+      resume.profile.photoUrl = photoUrl
+
+      await resume.save()
+
+      logger.info(`Profile photo updated for resume ${resumeId}`)
+
+      res.json({
+        success: true,
+        photoUrl,
+        message: 'Profile photo uploaded successfully',
+      })
+    } catch (error) {
+      logger.error(`Upload profile photo error: ${error.message}`)
+      // Clean up uploaded file on error
+      if (req.file?.path) {
+        await fs.unlink(req.file.path).catch(() => {})
+      }
+      res.status(500).json({
+        error: 'Internal server error',
+        message: 'Failed to upload profile photo',
+        statusCode: 500,
+      })
+    }
+  }
+)
+
+/**
+ * PATCH /api/resume/:resumeId/profile
+ * Update profile customization data
+ */
+router.patch(
+  '/:resumeId/profile',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { resumeId } = req.params
+      const updates = req.body
+
+      // Find resume
+      const resume = await Resume.findOne({ resumeId, isActive: true })
+      if (!resume) {
+        return res.status(404).json({
+          error: 'Resume not found',
+          statusCode: 404,
+        })
+      }
+
+      // Initialize profile if doesn't exist
+      if (!resume.profile) {
+        resume.profile = {}
+      }
+
+      // Update allowed fields
+      const allowedFields = [
+        'customName',
+        'headline',
+        'summary',
+        'quote',
+        'customSkills',
+        'strengths',
+        'customSummary',
+        'socialLinks'
+      ]
+
+      allowedFields.forEach(field => {
+        if (updates[field] !== undefined) {
+          resume.profile[field] = updates[field]
+        }
+      })
+
+      await resume.save()
+
+      logger.info(`Profile updated for resume ${resumeId}`)
+
+      res.json({
+        success: true,
+        profile: resume.profile,
+        message: 'Profile updated successfully',
+      })
+    } catch (error) {
+      logger.error(`Update profile error: ${error.message}`)
+      res.status(500).json({
+        error: 'Internal server error',
+        message: 'Failed to update profile',
+        statusCode: 500,
+      })
+    }
+  }
+)
+
+/**
+ * GET /api/resume/:resumeId/profile
+ * Get profile customization data
+ */
+router.get(
+  '/:resumeId/profile',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { resumeId } = req.params
+
+      const resume = await Resume.findOne({ resumeId, isActive: true })
+        .select('profile parsed_resume.name parsed_resume.skills parsed_resume.years_experience analysis')
+
+      if (!resume) {
+        return res.status(404).json({
+          error: 'Resume not found',
+          statusCode: 404,
+        })
+      }
+
+      // Merge extracted data with custom profile
+      const skillVerifications = resume.profile?.skillVerifications || []
+      const verificationLookup = skillVerifications.reduce((acc, entry) => {
+        if (entry.skill) {
+          acc[entry.skill.toLowerCase()] = entry
+        }
+        return acc
+      }, {})
+
+      const baseSkills = resume.profile?.customSkills && resume.profile.customSkills.length > 0
+        ? resume.profile.customSkills
+        : (resume.parsed_resume?.skills || []).map(skill => ({
+            name: skill,
+            level: 70,
+            category: 'Technical',
+            verified: false,
+            score: null,
+            badge: { level: 'none', label: BADGE_META.none.label },
+            lastVerifiedAt: null
+          }))
+
+      const mergedSkills = baseSkills.map(skillEntry => {
+        const key = skillEntry.name?.toLowerCase()
+        const verification = key ? verificationLookup[key] : null
+        if (!verification) {
+          return skillEntry
+        }
+        return {
+          ...skillEntry,
+          verified: verification.verified,
+          score: verification.score,
+          lastVerifiedAt: verification.lastVerifiedAt,
+          badge: verification.badge,
+        }
+      })
+
+      const profileData = {
+        // Custom profile data
+        ...(resume.profile || {}),
+        // Fallback to extracted data
+        name: resume.profile?.customName || resume.parsed_resume?.name || 'Your Name',
+        skills: mergedSkills,
+        customSkills: mergedSkills,
+        yearsExperience: resume.parsed_resume?.years_experience || 0,
+        // Analysis data for display
+        analysis: resume.analysis || null,
+        skillVerifications,
+      }
+
+      res.json({
+        success: true,
+        profile: profileData,
+      })
+    } catch (error) {
+      logger.error(`Get profile error: ${error.message}`)
+      res.status(500).json({
+        error: 'Internal server error',
+        message: 'Failed to retrieve profile',
+        statusCode: 500,
+      })
+    }
+  }
+)
+
+// ═══════════════════════════════════════════════════════════════════════
+// MCQ & RESOURCE GENERATION ROUTES
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * POST /api/resume/generate-mcq
+ * Generate MCQ questions for skill verification using Watson API
+ */
+router.post('/generate-mcq', authenticateToken, async (req, res) => {
+  const traceId = uuidv4()
+  const requestLogger = createLogger({ traceId })
+  
+  try {
+    const { skill, count = 5 } = req.body
+
+    if (!skill) {
+      return res.status(400).json({
+        error: 'Missing skill parameter',
+        message: 'Please provide a skill to generate questions for',
+        statusCode: 400,
+      })
+    }
+
+    // Validate count
+    const questionCount = Math.min(Math.max(parseInt(count) || 5, 3), 10);
+
+    requestLogger.info(`Generating ${questionCount} MCQ questions for skill: ${skill}`)
+
+    // Import Watson service
+    const { generateMCQQuestions } = await import('../services/llmParsingService.js')
+    
+    // Generate questions using Watson AI
+    const questions = await generateMCQQuestions(skill, questionCount)
+
+    // Validate questions format
+    const validQuestions = questions.filter(q => 
+      q.question && 
+      Array.isArray(q.options) && 
+      q.options.length === 4 &&
+      typeof q.correctAnswer === 'number' &&
+      q.correctAnswer >= 0 && 
+      q.correctAnswer < 4
+    );
+
+    if (validQuestions.length === 0) {
+      throw new Error('No valid questions generated');
+    }
+
+    requestLogger.info(`Successfully generated ${validQuestions.length} valid MCQ questions for ${skill}`)
+
+    res.json({
+      success: true,
+      skill,
+      count: validQuestions.length,
+      questions: validQuestions,
+    })
+
+  } catch (error) {
+    requestLogger.error(`MCQ generation failed:`, error)
+    res.status(500).json({
+      error: 'MCQ generation failed',
+      message: error.message,
+      statusCode: 500,
+    })
+  }
+})
+
+/**
+ * POST /api/resume/:resumeId/verify-skill
+ * Save skill verification result
+ */
+router.post('/:resumeId/verify-skill', authenticateToken, async (req, res) => {
+  try {
+    const { resumeId } = req.params
+    const { skill, score, correct = 0, total = 0, timestamp } = req.body
+
+    if (!skill || typeof skill !== 'string') {
+      return res.status(400).json({
+        error: 'Invalid skill',
+        message: 'Skill name is required',
+        statusCode: 400,
+      })
+    }
+
+    if (typeof score !== 'number' || Number.isNaN(score)) {
+      return res.status(400).json({
+        error: 'Invalid score',
+        message: 'A numeric score is required',
+        statusCode: 400,
+      })
+    }
+
+    const resume = await Resume.findOne({ resumeId, isActive: true })
+
+    if (!resume) {
+      return res.status(404).json({
+        error: 'Resume not found',
+        statusCode: 404,
+      })
+    }
+
+    // Initialize verifications array if not exists
+    if (!resume.profile) {
+      resume.profile = {}
+    }
+    if (!resume.profile.skillVerifications) {
+      resume.profile.skillVerifications = []
+    }
+
+    // Add or update verification
+    const existingIndex = resume.profile.skillVerifications.findIndex(
+      v => v.skill?.toLowerCase() === skill.toLowerCase()
+    )
+
+    const badge = determineSkillBadge(score)
+    const verifiedAt = timestamp ? new Date(timestamp) : new Date()
+    const verificationData = {
+      skill,
+      score,
+      correct,
+      total,
+      verified: score >= 70,
+      lastVerifiedAt: verifiedAt,
+      badge: {
+        level: badge.level,
+        label: badge.label,
+        awardedAt: verifiedAt,
+      },
+    }
+
+    if (existingIndex >= 0) {
+      resume.profile.skillVerifications[existingIndex] = verificationData
+    } else {
+      resume.profile.skillVerifications.push(verificationData)
+    }
+
+    // Sync custom skills with verification data
+    if (!Array.isArray(resume.profile.customSkills)) {
+      resume.profile.customSkills = []
+    }
+    if (Array.isArray(resume.profile.customSkills)) {
+      const skillIndex = resume.profile.customSkills.findIndex(
+        s => s.name?.toLowerCase() === skill.toLowerCase()
+      )
+
+      if (skillIndex >= 0) {
+        resume.profile.customSkills[skillIndex] = {
+          ...resume.profile.customSkills[skillIndex],
+          verified: verificationData.verified,
+          score: verificationData.score,
+          lastVerifiedAt: verificationData.lastVerifiedAt,
+          badge: verificationData.badge,
+        }
+      } else {
+        resume.profile.customSkills.push({
+          name: skill,
+          level: verificationData.score,
+          category: 'Technical',
+          verified: verificationData.verified,
+          score: verificationData.score,
+          lastVerifiedAt: verificationData.lastVerifiedAt,
+          badge: verificationData.badge,
+        })
+      }
+    }
+
+    // Update aggregated verification status snapshot
+    if (!resume.parsed_resume) {
+      resume.parsed_resume = {}
+    }
+    if (!resume.parsed_resume.verification_status) {
+      resume.parsed_resume.verification_status = {
+        isVerified: false,
+        verifiedSkills: [],
+        questionableSkills: [],
+        credibilityScore: 0,
+        badge: { level: 'none', label: BADGE_META.none.label, color: BADGE_META.none.color, icon: BADGE_META.none.icon },
+        interviewScore: 0,
+        totalInterviews: 0,
+        trustLevel: 'unverified'
+      }
+    }
+
+    const allVerifications = resume.profile.skillVerifications
+    const averageScore = allVerifications.length
+      ? Math.round(allVerifications.reduce((sum, entry) => sum + (entry.score || 0), 0) / allVerifications.length)
+      : 0
+    const overallBadge = determineSkillBadge(averageScore)
+
+    resume.parsed_resume.verification_status.isVerified = allVerifications.some(v => v.verified)
+    resume.parsed_resume.verification_status.verifiedAt = verifiedAt
+    resume.parsed_resume.verification_status.credibilityScore = averageScore
+    resume.parsed_resume.verification_status.interviewScore = averageScore
+    resume.parsed_resume.verification_status.totalInterviews = allVerifications.length
+    resume.parsed_resume.verification_status.badge = {
+      level: overallBadge.level,
+      label: overallBadge.label,
+      color: overallBadge.color,
+      icon: overallBadge.icon
+    }
+    resume.parsed_resume.verification_status.trustLevel = deriveTrustLevel(averageScore)
+    resume.parsed_resume.verification_status.lastInterviewAt = verifiedAt
+    resume.parsed_resume.verification_status.verifiedSkills = allVerifications
+      .filter(v => v.verified)
+      .map(v => ({ skill: v.skill, score: v.score, status: 'verified' }))
+    resume.parsed_resume.verification_status.questionableSkills = allVerifications
+      .filter(v => !v.verified)
+      .map(v => ({ skill: v.skill, score: v.score, status: 'needs_improvement' }))
+
+    resume.markModified('profile.skillVerifications')
+    resume.markModified('profile.customSkills')
+    resume.markModified('parsed_resume.verification_status')
+
+    await resume.save()
+
+    res.json({
+      success: true,
+      verification: verificationData,
+      skillVerifications: allVerifications,
+      profile: resume.profile,
+      verificationStatus: resume.parsed_resume.verification_status,
+    })
+
+  } catch (error) {
+    logger.error(`Skill verification save failed: ${error.message}`)
+    res.status(500).json({
+      error: 'Failed to save verification',
+      message: error.message,
+      statusCode: 500,
+    })
+  }
+})
+
+/**
+ * POST /api/resume/generate-resources
+ * Generate learning resources for skills using Watson/Gemini API
+ */
+router.post('/generate-resources', authenticateToken, async (req, res) => {
+  try {
+    const { skills, limit = 10 } = req.body
+
+    if (!skills || !Array.isArray(skills) || skills.length === 0) {
+      return res.status(400).json({
+        error: 'Missing skills parameter',
+        message: 'Please provide an array of skills',
+        statusCode: 400,
+      })
+    }
+
+    requestLogger.info(`Generating resources for ${skills.length} skills`)
+
+    // Import resource generation service
+    const { generateLearningResources } = await import('../services/llmParsingService.js')
+    
+    // Generate resources using AI
+    const resources = await generateLearningResources(skills, limit)
+
+    res.json({
+      success: true,
+      count: resources.length,
+      resources,
+    })
+
+  } catch (error) {
+    requestLogger.error(`Resource generation failed:`, error)
+    res.status(500).json({
+      error: 'Resource generation failed',
+      message: error.message,
       statusCode: 500,
     })
   }

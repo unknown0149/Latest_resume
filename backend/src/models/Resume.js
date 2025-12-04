@@ -9,8 +9,14 @@ const resumeSchema = new mongoose.Schema(
       index: true,
     },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: false, // Optional for Phase 1, will be required when auth is implemented
+      index: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
       index: true,
     },
     raw_text: {
@@ -113,6 +119,32 @@ const resumeSchema = new mongoose.Schema(
         type: String,
         lowercase: true,
       }],
+      // Verification status for skill interviews
+      verification_status: {
+        isVerified: { type: Boolean, default: false },
+        verifiedAt: Date,
+        credibilityScore: { type: Number, default: 0, min: 0, max: 100 },
+        badge: {
+          level: { type: String, enum: ['gold', 'silver', 'bronze', 'none'], default: 'none' },
+          label: String,
+          color: String,
+          icon: String
+        },
+        verifiedSkills: [{
+          skill: String,
+          score: Number,
+          status: String
+        }],
+        questionableSkills: [{
+          skill: String,
+          score: Number,
+          status: String
+        }],
+        interviewScore: { type: Number, default: 0 },
+        totalInterviews: { type: Number, default: 0 },
+        lastInterviewAt: Date,
+        trustLevel: String
+      },
       education: [{
         degree: String,
         institution: String,
@@ -140,6 +172,59 @@ const resumeSchema = new mongoose.Schema(
       certifications: [String],
       languages: [String],
       links: [String], // URLs (GitHub, LinkedIn, portfolio, etc.)
+      soft_skills: [{
+        skill: String,
+        confidence: Number, // 0-1
+        evidence: [String], // Text snippets showing this skill
+      }],
+      profile_photo: String, // Base64 or file path to extracted photo
+    },
+    
+    // User customizable profile data
+    profile: {
+      photoUrl: String, // URL to uploaded profile photo
+      customName: String, // User can override extracted name
+      headline: String, // Professional headline/tagline
+      summary: String, // Professional summary
+      quote: String, // Personal quote/motto
+      customSkills: [{
+        name: String,
+        level: { type: Number, min: 0, max: 100 }, // 0-100 strength
+        category: String, // e.g., "Technical", "Soft Skills", "Languages"
+        verified: { type: Boolean, default: false },
+        score: { type: Number, min: 0, max: 100 },
+        lastVerifiedAt: Date,
+        badge: {
+          level: { type: String, enum: ['gold', 'silver', 'bronze', 'none'], default: 'none' },
+          label: String,
+          awardedAt: Date
+        }
+      }],
+      strengths: [{
+        name: String,
+        value: { type: Number, min: 0, max: 100 }, // For radar/bar charts
+      }],
+      customSummary: String, // User's own summary if they want to override AI
+      socialLinks: {
+        linkedin: String,
+        github: String,
+        portfolio: String,
+        twitter: String,
+        other: [String],
+      },
+      skillVerifications: [{
+        skill: String,
+        score: { type: Number, min: 0, max: 100 },
+        correct: Number,
+        total: Number,
+        verified: { type: Boolean, default: false },
+        lastVerifiedAt: Date,
+        badge: {
+          level: { type: String, enum: ['gold', 'silver', 'bronze', 'none'], default: 'none' },
+          label: String,
+          awardedAt: Date
+        }
+      }],
     },
     
     // Extraction metadata (NEW - Phase 2 Parsing)
@@ -263,10 +348,6 @@ const resumeSchema = new mongoose.Schema(
             min: Number,
             max: Number,
           },
-          absoluteINR: {
-            min: Number,
-            max: Number,
-          },
         },
       }],
       salaryBoostOpportunities: [{
@@ -278,12 +359,10 @@ const resumeSchema = new mongoose.Schema(
             min: Number,
             max: Number,
           },
-          INR: {
-            min: Number,
-            max: Number,
-          },
         },
       }],
+      tagline: String, // Generated personalized tagline
+      strengths: [String], // Top strengths identified
       analyzedAt: Date,
     },
     

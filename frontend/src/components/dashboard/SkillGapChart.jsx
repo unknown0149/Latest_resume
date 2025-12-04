@@ -1,5 +1,10 @@
+import { useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 import Card from '../ui/Card'
+
+const PRIMARY_COLOR = '#2563eb'
+const SECONDARY_COLOR = '#34d399'
+const GRID_COLOR = '#e2e8f0'
 
 const SkillGapChart = ({ data, type = 'bar' }) => {
   if (!data || data.length === 0) {
@@ -10,35 +15,55 @@ const SkillGapChart = ({ data, type = 'bar' }) => {
     )
   }
 
+  const categorizedSkills = useMemo(() => {
+    const strong = []
+    const focus = []
+
+    data.forEach((skill) => {
+      if (skill.current >= skill.required * 0.7) {
+        strong.push(skill)
+      } else {
+        focus.push(skill)
+      }
+    })
+
+    return { strong, focus }
+  }, [data])
+
   return (
-    <Card>
-      <h3 className="text-xl font-bold text-gray-900 mb-6">Skill Gap Analysis</h3>
+    <Card className="bg-[var(--rg-surface,white)]">
+      <div className="flex flex-col gap-2 mb-6">
+        <h3 className="text-xl font-semibold text-slate-900">Skill Gap Analysis</h3>
+        <p className="text-sm text-slate-500">
+          Levels are estimated from resume mentions, years of experience, and where each skill appears in your projects/responsibilities.
+        </p>
+      </div>
       
       {type === 'bar' ? (
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis dataKey="skill" tick={{ fill: '#6b7280', fontSize: 12 }} />
-            <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} />
+            <XAxis dataKey="skill" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+            <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} />
             <Tooltip 
-              contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
-              cursor={{ fill: 'rgba(96, 165, 250, 0.1)' }}
+              contentStyle={{ backgroundColor: '#0f172a', color: '#f8fafc', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+              cursor={{ fill: 'rgba(37, 99, 235, 0.08)' }}
             />
-            <Legend />
-            <Bar dataKey="current" fill="#60a5fa" name="Your Level" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="required" fill="#86efac" name="Required Level" radius={[8, 8, 0, 0]} />
+            <Legend formatter={(value) => <span className="text-sm text-slate-600">{value}</span>} />
+            <Bar dataKey="current" fill={PRIMARY_COLOR} name="Your Level" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="required" fill={SECONDARY_COLOR} name="Required Level" radius={[6, 6, 0, 0]} opacity={0.7} />
           </BarChart>
         </ResponsiveContainer>
       ) : (
         <ResponsiveContainer width="100%" height={400}>
           <RadarChart data={data}>
-            <PolarGrid stroke="#e5e7eb" />
-            <PolarAngleAxis dataKey="skill" tick={{ fill: '#6b7280', fontSize: 12 }} />
-            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10 }} />
-            <Radar name="Your Level" dataKey="current" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.6} />
-            <Radar name="Required Level" dataKey="required" stroke="#86efac" fill="#86efac" fillOpacity={0.6} />
-            <Legend />
-            <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
+            <PolarGrid stroke={GRID_COLOR} />
+            <PolarAngleAxis dataKey="skill" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#94a3b8', fontSize: 10 }} />
+            <Radar name="Your Level" dataKey="current" stroke={PRIMARY_COLOR} fill={PRIMARY_COLOR} fillOpacity={0.55} />
+            <Radar name="Required Level" dataKey="required" stroke={SECONDARY_COLOR} fill={SECONDARY_COLOR} fillOpacity={0.4} />
+            <Legend formatter={(value) => <span className="text-sm text-slate-600">{value}</span>} />
+            <Tooltip contentStyle={{ backgroundColor: '#0f172a', color: '#f8fafc', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
           </RadarChart>
         </ResponsiveContainer>
       )}
@@ -51,7 +76,7 @@ const SkillGapChart = ({ data, type = 'bar' }) => {
             Skills You Have
           </h4>
           <ul className="space-y-2">
-            {data.filter(s => s.current >= s.required * 0.7).map((skill, idx) => (
+            {categorizedSkills.strong.map((skill, idx) => (
               <li key={idx} className="text-sm text-gray-600 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
                 {skill.skill}
@@ -65,7 +90,7 @@ const SkillGapChart = ({ data, type = 'bar' }) => {
             Skills to Improve
           </h4>
           <ul className="space-y-2">
-            {data.filter(s => s.current < s.required * 0.7).map((skill, idx) => (
+            {categorizedSkills.focus.map((skill, idx) => (
               <li key={idx} className="text-sm text-gray-600 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                 {skill.skill}
@@ -74,6 +99,10 @@ const SkillGapChart = ({ data, type = 'bar' }) => {
           </ul>
         </div>
       </div>
+
+      <p className="mt-6 text-xs text-slate-400">
+        Tip: scores are heuristic—mentioning a skill near the top of your resume, pairing it with concrete experience, or listing recent projects will raise your "current" level.
+      </p>
     </Card>
   )
 }

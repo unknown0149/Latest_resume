@@ -1,79 +1,80 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, X, Upload, LayoutDashboard, Settings, LogIn, LogOut, User } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { Menu, X, Upload, LayoutDashboard, LogIn, LogOut, User, Moon, SunMedium } from 'lucide-react'
+import { useState } from 'react'
 import Button from './Button'
+import { useAuth } from '../../hooks/useAuth'
+import { useTheme } from '../../hooks/useTheme'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userName, setUserName] = useState('')
+  const { isAuthenticated, user, logout } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
 
   const isActive = (path) => location.pathname === path
 
-  // Check authentication on mount and route change
-  useEffect(() => {
-    const checkAuth = () => {
-      const authStatus = localStorage.getItem('isAuthenticated') === 'true'
-      const name = localStorage.getItem('userName') || 'User'
-      setIsAuthenticated(authStatus)
-      setUserName(name)
-    }
-    
-    checkAuth()
-    // Re-check on route change
-    window.addEventListener('storage', checkAuth)
-    return () => window.removeEventListener('storage', checkAuth)
-  }, [location])
-
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated')
-    localStorage.removeItem('userName')
-    localStorage.removeItem('auth_token')
-    setIsAuthenticated(false)
+  const handleLogout = async () => {
+    await logout()
     setIsMenuOpen(false)
     navigate('/')
   }
 
+  const ThemeToggleButton = () => (
+    <button
+      onClick={toggleTheme}
+      className="p-2 rounded-full border border-[var(--rg-border)] hover:bg-[var(--rg-surface-alt)] transition-colors"
+      aria-label="Toggle theme"
+    >
+      {theme === 'light' ? <Moon className="w-4 h-4" /> : <SunMedium className="w-4 h-4" />}
+    </button>
+  )
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--rg-surface)]/90 backdrop-blur-xl border-b border-[var(--rg-border)] text-[var(--rg-text-primary)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-white">
-                <path d="M7 9L12 14L17 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div className="w-10 h-10 rounded-lg border border-[var(--rg-border)] flex items-center justify-center text-[var(--rg-text-primary)] font-semibold">
+              RG
             </div>
-            <span className="text-xl font-bold gradient-text">Resume Genie</span>
+            <span className="text-xl font-bold tracking-tight text-[var(--rg-text-primary)]">Resume Genie</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <Link 
               to="/" 
-              className={`text-sm font-medium transition-colors ${isActive('/') ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}`}
+              className={`text-sm font-medium transition-colors ${isActive('/') ? 'text-[var(--rg-text-primary)]' : 'text-[var(--rg-text-secondary)] hover:text-[var(--rg-text-primary)]'}`}
             >
               Home
             </Link>
             <Link 
               to="/upload" 
-              className={`text-sm font-medium transition-colors ${isActive('/upload') ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}`}
+              className={`text-sm font-medium transition-colors ${isActive('/upload') ? 'text-[var(--rg-text-primary)]' : 'text-[var(--rg-text-secondary)] hover:text-[var(--rg-text-primary)]'}`}
             >
               Upload Resume
             </Link>
             <Link 
               to="/dashboard" 
-              className={`text-sm font-medium transition-colors ${isActive('/dashboard') ? 'text-primary-500' : 'text-gray-600 hover:text-primary-500'}`}
+              className={`text-sm font-medium transition-colors ${isActive('/dashboard') ? 'text-[var(--rg-text-primary)]' : 'text-[var(--rg-text-secondary)] hover:text-[var(--rg-text-primary)]'}`}
             >
               Dashboard
             </Link>
+            {isAuthenticated && (
+              <Link 
+                to="/profile" 
+                className={`text-sm font-medium transition-colors ${isActive('/profile') ? 'text-[var(--rg-text-primary)]' : 'text-[var(--rg-text-secondary)] hover:text-[var(--rg-text-primary)]'}`}
+              >
+                Profile
+              </Link>
+            )}
           </nav>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggleButton />
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard">
@@ -82,9 +83,9 @@ const Navbar = () => {
                     Dashboard
                   </Button>
                 </Link>
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
-                  <User className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">{userName}</span>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-[var(--rg-bg-muted)] rounded-lg border border-[var(--rg-border)]">
+                  <User className="w-4 h-4 text-[var(--rg-text-secondary)]" />
+                  <span className="text-sm font-medium text-[var(--rg-text-primary)]">{user?.name || 'User'}</span>
                 </div>
                 <Button variant="outline" size="sm" onClick={handleLogout}>
                   <LogOut className="w-4 h-4 mr-2" />
@@ -112,7 +113,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="md:hidden p-2 rounded-lg border border-[var(--rg-border)] hover:bg-[var(--rg-surface-alt)] transition-colors"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -121,11 +122,15 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white">
+        <div className="md:hidden border-t border-[var(--rg-border)] bg-[var(--rg-surface)]">
           <div className="px-4 py-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold">Theme</span>
+              <ThemeToggleButton />
+            </div>
             <Link 
               to="/" 
-              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-50"
+              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[var(--rg-bg-muted)]"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
@@ -134,26 +139,33 @@ const Navbar = () => {
               <>
                 <Link 
                   to="/upload" 
-                  className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-50"
+                  className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[var(--rg-bg-muted)]"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Upload Resume
                 </Link>
                 <Link 
                   to="/dashboard" 
-                  className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-50"
+                  className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[var(--rg-bg-muted)]"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
+                <Link 
+                  to="/profile" 
+                  className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[var(--rg-bg-muted)]"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Profile
+                </Link>
               </>
             )}
-            <div className="pt-3 border-t border-gray-200 space-y-2">
+            <div className="pt-3 border-t border-[var(--rg-border)] space-y-2">
               {isAuthenticated ? (
                 <>
-                  <div className="px-4 py-2 bg-gray-100 rounded-lg flex items-center gap-2">
-                    <User className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm font-medium text-gray-700">{userName}</span>
+                  <div className="px-4 py-2 bg-[var(--rg-bg-muted)] rounded-lg flex items-center gap-2 border border-[var(--rg-border)]">
+                    <User className="w-4 h-4 text-[var(--rg-text-secondary)]" />
+                    <span className="text-sm font-medium text-[var(--rg-text-primary)]">{user?.name || 'User'}</span>
                   </div>
                   <Button variant="outline" className="w-full" onClick={handleLogout}>
                     <LogOut className="w-4 h-4 mr-2" />

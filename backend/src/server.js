@@ -1,12 +1,22 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { logger } from './utils/logger.js'
 import connectDB from './config/database.js'
 import resumeRoutes from './routes/resume.routes.js'
 import jobRoutes from './routes/job.routes.js'
+import authRoutes from './routes/auth.routes.js'
+import userRoutes from './routes/user.routes.js'
+import interviewRoutes from './routes/interview.routes.js'
+import quizRoutes from './routes/quiz.routes.js'
+import roadmapRoutes from './routes/roadmap.routes.js'
 import { startJobScheduler, stopJobScheduler } from './services/jobFetchService.js'
 import { startQueueWorker, stopQueueWorker } from './services/embeddingQueueService.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Load environment variables
 dotenv.config()
@@ -30,6 +40,13 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// Request timeout middleware (120 seconds for resume processing)
+app.use((req, res, next) => {
+  req.setTimeout(120000) // 120 seconds
+  res.setTimeout(120000)
+  next()
+})
+
 // Request logging middleware
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
@@ -50,8 +67,16 @@ app.get('/health', (req, res) => {
 })
 
 // API Routes
+app.use('/api/auth', authRoutes) // Authentication routes
+app.use('/api/user', userRoutes) // User profile routes
+app.use('/api/interview', interviewRoutes) // AI Interview verification routes
+app.use('/api/quiz', quizRoutes) // MCQ Quiz system routes
+app.use('/api', roadmapRoutes) // Learning roadmap routes
 app.use('/api/resume', resumeRoutes)
 app.use('/api', jobRoutes) // Phase 2: Job matching and role analysis routes
+
+// Serve static files (avatars, uploads)
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
 // 404 handler
 app.use((req, res) => {

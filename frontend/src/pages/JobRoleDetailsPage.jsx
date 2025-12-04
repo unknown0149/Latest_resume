@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Briefcase, MapPin, DollarSign, CheckCircle, XCircle, Target, Lightbulb } from 'lucide-react'
+import { ArrowLeft, Briefcase, MapPin, DollarSign, CheckCircle, XCircle, Target, Lightbulb, ExternalLink } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Navbar from '../components/ui/Navbar'
 import Footer from '../components/ui/Footer'
@@ -19,7 +19,21 @@ const JobRoleDetailsPage = () => {
     return null
   }
 
+  const job = role.job || role;
+  const applicationUrl = job.applicationUrl || role.applicationUrl;
   const roleSkillGaps = skillGaps[role.id]
+  
+  // Format salary with currency symbol
+  const formatSalary = (salaryObj) => {
+    if (!salaryObj) return role.salary; // Fallback to existing salary string
+    const currency = salaryObj.currency || 'INR';
+    const symbol = currency === 'INR' ? '₹' : '$';
+    const min = salaryObj.min?.toLocaleString('en-IN');
+    const max = salaryObj.max?.toLocaleString('en-IN');
+    return `${symbol}${min}-${symbol}${max}`;
+  };
+  
+  const displaySalary = formatSalary(job.salary);
 
   const projectSuggestions = [
     'Build a full-stack e-commerce platform with microservices architecture',
@@ -78,15 +92,25 @@ const JobRoleDetailsPage = () => {
                     </div>
                     <div className="flex items-center gap-2 text-primary-600 font-semibold">
                       <DollarSign className="w-5 h-5" />
-                      <span>{role.salary}</span>
+                      <span>{displaySalary}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div className="flex-shrink-0">
-                  <Button size="lg">
-                    Apply Now
-                  </Button>
+                  {applicationUrl ? (
+                    <Button 
+                      size="lg"
+                      onClick={() => window.open(applicationUrl, '_blank', 'noopener,noreferrer')}
+                    >
+                      Apply to Job
+                      <ExternalLink className="w-5 h-5 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button size="lg" disabled>
+                      No Application Link
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card>

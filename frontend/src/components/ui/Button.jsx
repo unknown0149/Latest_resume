@@ -9,13 +9,13 @@ const Button = ({
   isLoading = false,
   ...props 
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
+  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--rg-text-primary)] focus-visible:ring-offset-[var(--rg-bg)]'
   
   const variants = {
-    primary: 'bg-gradient-primary text-white hover:shadow-lg hover:-translate-y-0.5',
-    secondary: 'bg-gradient-secondary text-white hover:shadow-lg hover:-translate-y-0.5',
-    outline: 'border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-500',
-    ghost: 'text-gray-700 hover:bg-gray-100',
+    primary: 'bg-[var(--rg-text-primary)] text-[var(--rg-bg)] shadow-soft hover:opacity-90',
+    secondary: 'bg-[var(--rg-surface-alt)] text-[var(--rg-text-primary)] border border-[var(--rg-border)] hover:border-[var(--rg-border-strong)] hover:shadow-soft',
+    outline: 'border border-[var(--rg-border)] text-[var(--rg-text-primary)] hover:bg-[var(--rg-surface-alt)]',
+    ghost: 'text-[var(--rg-text-secondary)] hover:text-[var(--rg-text-primary)] hover:bg-[var(--rg-bg-muted)]/60',
     danger: 'bg-red-500 text-white hover:bg-red-600',
   }
 
@@ -23,6 +23,7 @@ const Button = ({
     sm: 'px-4 py-2 text-sm',
     md: 'px-6 py-2.5 text-base',
     lg: 'px-8 py-3 text-lg',
+    xl: 'px-10 py-4 text-xl',
   }
 
   return (

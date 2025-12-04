@@ -1,16 +1,3458 @@
-title,company,description,required_skills,preferred_skills,location,salary_min,salary_max,job_type,experience_level,remote,posted_date
-Senior Full Stack Developer,Tech Solutions Inc,"We are seeking an experienced Full Stack Developer to join our team. You will work on building scalable web applications using modern JavaScript technologies.","JavaScript,React,Node.js,MongoDB,REST API","TypeScript,Docker,AWS,GraphQL",San Francisco,120000,180000,Full-time,Senior,false,2024-11-20
-Frontend Developer,StartUp Ventures,"Looking for a creative Frontend Developer to build beautiful user interfaces. Experience with React and modern CSS is essential.","React,JavaScript,HTML,CSS,Redux","TypeScript,Next.js,Tailwind CSS",Remote,90000,130000,Full-time,Mid-level,true,2024-11-21
-Backend Engineer,Cloud Systems,"Join our backend team to build robust APIs and microservices. Strong knowledge of Node.js and databases required.","Node.js,Express,MongoDB,PostgreSQL,REST API","Docker,Kubernetes,AWS,Redis",New York,110000,160000,Full-time,Mid-level,false,2024-11-19
-DevOps Engineer,Infrastructure Co,"We need a DevOps Engineer to manage our cloud infrastructure and CI/CD pipelines.","Docker,Kubernetes,AWS,Linux,CI/CD","Terraform,Ansible,Python,Jenkins",Austin,130000,190000,Full-time,Senior,false,2024-11-18
-Python Developer,Data Analytics Corp,"Seeking Python developer for data processing and API development. Experience with Django or Flask required.","Python,Django,Flask,PostgreSQL,REST API","Docker,AWS,Redis,Celery",Boston,100000,150000,Full-time,Mid-level,false,2024-11-22
-React Native Developer,Mobile Apps Inc,"Build cross-platform mobile applications using React Native. iOS and Android experience preferred.","React Native,JavaScript,Redux,REST API","TypeScript,Firebase,GraphQL",Remote,95000,140000,Full-time,Mid-level,true,2024-11-20
-Data Engineer,Analytics Platform,"Looking for Data Engineer to build ETL pipelines and data warehouses.","Python,SQL,Spark,Airflow,AWS","Kafka,Snowflake,dbt,Redshift",Seattle,125000,175000,Full-time,Senior,false,2024-11-17
-UI/UX Engineer,Design Studio,"We need a UI/UX Engineer who can design and implement beautiful interfaces.","React,JavaScript,HTML,CSS,Figma","TypeScript,Tailwind CSS,Storybook",Los Angeles,85000,125000,Full-time,Mid-level,false,2024-11-23
-Full Stack Engineer,E-commerce Co,"Join our team to build scalable e-commerce platforms. MERN stack experience required.","JavaScript,React,Node.js,MongoDB,Express","TypeScript,Redis,Docker,AWS",Chicago,105000,155000,Full-time,Mid-level,false,2024-11-19
-Cloud Architect,Enterprise Systems,"Design and implement cloud infrastructure for enterprise applications.","AWS,Azure,Kubernetes,Terraform,Python","GCP,Docker,Ansible,CI/CD",Remote,150000,220000,Full-time,Senior,true,2024-11-16
-Junior Full Stack Developer,Learning Platform,"Great opportunity for junior developers to grow. Mentorship provided.","JavaScript,React,Node.js,HTML,CSS","MongoDB,Express,Git",Remote,60000,85000,Full-time,Junior,true,2024-11-22
-Software Engineer,FinTech Solutions,"Build financial software applications. Java or JavaScript experience needed.","JavaScript,Java,SQL,REST API,Git","Spring Boot,React,Docker,AWS",New York,115000,165000,Full-time,Mid-level,false,2024-11-21
-Machine Learning Engineer,AI Research Lab,"Develop ML models and deploy them to production. Python and deep learning frameworks required.","Python,TensorFlow,PyTorch,scikit-learn,Docker","Kubernetes,AWS,FastAPI,MLflow",San Francisco,140000,200000,Full-time,Senior,false,2024-11-15
-QA Automation Engineer,Quality Assurance Co,"Build automated testing frameworks and ensure software quality.","JavaScript,Selenium,Cypress,Jest,Git","Python,Docker,CI/CD,Playwright",Remote,85000,120000,Full-time,Mid-level,true,2024-11-20
-GraphQL Developer,API Services Inc,"Design and implement GraphQL APIs. Node.js and database experience required.","Node.js,GraphQL,MongoDB,PostgreSQL,REST API","TypeScript,Docker,AWS,Redis",Austin,100000,145000,Full-time,Mid-level,false,2024-11-18
+[
+  {
+    "title": "Internshala - Summer Internships 2025",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Indeed - Data Scientist jobs in Chennai",
+    "company": "Indeed",
+    "location": "Chennai, Tamil Nadu",
+    "description": "Listing page / category for job opportunities at Indeed. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Degree in Statistics, Math, CS or related field.",
+      "Proficiency in Python/R and SQL.",
+      "Experience with data cleaning and EDA.",
+      "Familiarity with ML frameworks and model evaluation.",
+      "Comfort with visualization tools like Tableau or Power BI."
+    ],
+    "responsibilities": [
+      "Collect and preprocess data for analysis.",
+      "Build models and produce insights for stakeholders.",
+      "Create dashboards and reports.",
+      "Monitor and improve model performance."
+    ],
+    "salary_min": 400000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Machine Learning",
+      "NumPy",
+      "Pandas",
+      "Python",
+      "SQL",
+      "Statistics"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.indeed.co.in/Data-Scientist-jobs-in-Chennai",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "LinkedIn - Software Engineer jobs in India",
+    "company": "LinkedIn",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at LinkedIn. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Bachelor's degree in CS/Engineering or equivalent experience.",
+      "Strong programming skills in Python, Java, or JavaScript.",
+      "Understanding of data structures and algorithms.",
+      "Experience with REST APIs and microservices.",
+      "Familiarity with Git and CI/CD workflows.",
+      "Knowledge of relational and NoSQL databases."
+    ],
+    "responsibilities": [
+      "Design, implement and maintain software features.",
+      "Write unit and integration tests; participate in code reviews.",
+      "Work with product and QA to ship reliable releases.",
+      "Troubleshoot and resolve production issues."
+    ],
+    "salary_min": 400000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Git",
+      "Java",
+      "JavaScript",
+      "Python",
+      "REST APIs",
+      "SQL"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://in.linkedin.com/jobs/software-engineer-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "TCS Careers - Opportunities",
+    "company": "Tata Consultancy Services",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at Tata Consultancy Services. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.tcs.com/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Infosys Careers - Openings",
+    "company": "Infosys",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at Infosys. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.infosys.com/careers.html",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Wipro Careers",
+    "company": "Wipro",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at Wipro. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://careers.wipro.com/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Amazon Jobs India",
+    "company": "Amazon",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at Amazon. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.amazon.jobs/en/locations/india",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Flipkart Careers",
+    "company": "Flipkart",
+    "location": "Bengaluru, India",
+    "description": "Listing page / category for job opportunities at Flipkart. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.flipkartcareers.com/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Zoho Careers",
+    "company": "Zoho",
+    "location": "Chennai, India",
+    "description": "Listing page / category for job opportunities at Zoho. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.zoho.com/careers.html",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Google Careers India",
+    "company": "Google",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Google. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://careers.google.com/locations/india/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Microsoft Careers India",
+    "company": "Microsoft",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Microsoft. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://careers.microsoft.com/us/en/locations/india",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "IBM Careers India",
+    "company": "IBM",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at IBM. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.ibm.com/in-en/employment/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Cognizant Careers India",
+    "company": "Cognizant",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Cognizant. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.cognizant.com/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Accenture Careers India",
+    "company": "Accenture",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Accenture. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.accenture.com/in-en/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "HCLTech Careers",
+    "company": "HCLTech",
+    "location": "Noida, India",
+    "description": "Listing page / category for job opportunities at HCLTech. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.hcltech.com/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Mahindra Careers",
+    "company": "Mahindra",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Mahindra. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.mahindra.com/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "BYJU'S Careers",
+    "company": "BYJU'S",
+    "location": "Bengaluru, India",
+    "description": "Listing page / category for job opportunities at BYJU'S. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://byjus.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Dr. Reddy's Careers",
+    "company": "Dr. Reddy's Laboratories",
+    "location": "Hyderabad, India",
+    "description": "Listing page / category for job opportunities at Dr. Reddy's Laboratories. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.drreddys.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "ICICI Bank Careers",
+    "company": "ICICI Bank",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at ICICI Bank. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.icicibank.com/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Hindustan Unilever Careers",
+    "company": "HUL",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at HUL. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.hul.co.in/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Tata Steel Careers",
+    "company": "Tata Steel",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Tata Steel. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.tatasteel.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "OYO Careers",
+    "company": "OYO",
+    "location": "Gurugram, India",
+    "description": "Listing page / category for job opportunities at OYO. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.oyorooms.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Swiggy Careers",
+    "company": "Swiggy",
+    "location": "Bengaluru, India",
+    "description": "Listing page / category for job opportunities at Swiggy. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://careers.swiggy.com/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Zomato Careers",
+    "company": "Zomato",
+    "location": "Gurugram, India",
+    "description": "Listing page / category for job opportunities at Zomato. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.zomato.com/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Ola Careers",
+    "company": "Ola",
+    "location": "Bengaluru, India",
+    "description": "Listing page / category for job opportunities at Ola. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://ola.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Mahindra Finance Internships",
+    "company": "Mahindra Finance",
+    "location": "Multiple cities",
+    "description": "Listing page / category for internship opportunities at Mahindra Finance. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.mahindrafinance.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Capgemini Early Careers",
+    "company": "Capgemini",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Capgemini. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.capgemini.com/in-en/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "EY India Careers",
+    "company": "EY",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at EY. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.ey.com/en_in/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "KPMG India Careers",
+    "company": "KPMG",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at KPMG. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://home.kpmg/in/en/home/careers.html",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Deloitte India Careers",
+    "company": "Deloitte",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Deloitte. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www2.deloitte.com/in/en/careers.html",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Pharmaceutical internships - Internshala category",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/pharma-internship/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Marketing internships - Internshala category",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Content Writing",
+      "Google Analytics",
+      "MS Office",
+      "SEO",
+      "Social Media",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/marketing-internship/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Design internships - Internshala category",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Adobe Photoshop",
+      "Communication",
+      "Figma",
+      "MS Office",
+      "Teamwork",
+      "Wireframing"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/design-internship/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "NITI Aayog Careers",
+    "company": "NITI Aayog",
+    "location": "New Delhi",
+    "description": "Listing page / category for job opportunities at NITI Aayog. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://niti.gov.in/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "AICTE Internship programs",
+    "company": "AICTE",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities at AICTE. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.aicte-india.org/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "ISI Kolkata Careers & Internships",
+    "company": "Indian Statistical Institute",
+    "location": "Kolkata",
+    "description": "Listing page / category for internship opportunities at Indian Statistical Institute. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.isical.ac.in/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "IIT Bombay Careers & Internships",
+    "company": "IIT Bombay",
+    "location": "Mumbai",
+    "description": "Listing page / category for internship opportunities at IIT Bombay. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.iitb.ac.in/en/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "SIEMENS India Careers",
+    "company": "Siemens",
+    "location": "India",
+    "description": "Listing page / category for job opportunities at Siemens. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://new.siemens.com/in/en/company/jobs.html",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "OYO - Internships",
+    "company": "OYO",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities at OYO. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.oyorooms.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Tata Motors Careers",
+    "company": "Tata Motors",
+    "location": "Pune",
+    "description": "Listing page / category for job opportunities at Tata Motors. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.tatamotors.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Piramal Pharma Careers",
+    "company": "Piramal",
+    "location": "Mumbai",
+    "description": "Listing page / category for job opportunities at Piramal. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.piramal.com/careers/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "UiPath India Careers",
+    "company": "UiPath",
+    "location": "Bengaluru",
+    "description": "Listing page / category for job opportunities at UiPath. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.uipath.com/company/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Adobe India Careers",
+    "company": "Adobe",
+    "location": "Noida/Bengaluru",
+    "description": "Listing page / category for job opportunities at Adobe. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.adobe.com/careers.html",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Paytm Careers",
+    "company": "Paytm",
+    "location": "Noida",
+    "description": "Listing page / category for job opportunities at Paytm. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Relevant domain experience and ability to work in a team.",
+      "Good communication skills and accountability."
+    ],
+    "responsibilities": [
+      "Execute role-specific tasks and collaborate with the team.",
+      "Document progress and follow company processes."
+    ],
+    "salary_min": 300000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "Problem Solving"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://paytm.com/careers",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Naukri - Software Engineer Jobs India",
+    "company": "Naukri.com",
+    "location": "India (multiple)",
+    "description": "Software Engineer Jobs India at Naukri.com located in India (multiple). Responsible for role-specific delivery and collaboration.",
+    "requirements": [
+      "Bachelor's degree in CS/Engineering or equivalent experience.",
+      "Strong programming skills in Python, Java, or JavaScript.",
+      "Understanding of data structures and algorithms.",
+      "Experience with REST APIs and microservices.",
+      "Familiarity with Git and CI/CD workflows.",
+      "Knowledge of relational and NoSQL databases."
+    ],
+    "responsibilities": [
+      "Design, implement and maintain software features.",
+      "Write unit and integration tests; participate in code reviews.",
+      "Work with product and QA to ship reliable releases.",
+      "Troubleshoot and resolve production issues."
+    ],
+    "salary_min": 400000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Git",
+      "Java",
+      "JavaScript",
+      "Python",
+      "REST APIs",
+      "SQL"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.naukri.com/software-engineer-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Naukri - Marketing Jobs India",
+    "company": "Naukri.com",
+    "location": "India (multiple)",
+    "description": "Marketing Jobs India at Naukri.com located in India (multiple). Responsible for role-specific delivery and collaboration.",
+    "requirements": [
+      "Good understanding of digital marketing channels.",
+      "Experience with content creation and campaign management.",
+      "Familiarity with SEO and analytics tools."
+    ],
+    "responsibilities": [
+      "Plan and execute marketing campaigns.",
+      "Create and optimize content for channels.",
+      "Analyze campaign performance and iterate."
+    ],
+    "salary_min": 300000,
+    "salary_max": 900000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Content Writing",
+      "Google Analytics",
+      "SEO",
+      "Social Media"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.naukri.com/marketing-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "TimesJobs - Data Analyst Jobs India",
+    "company": "TimesJobs",
+    "location": "India (multiple)",
+    "description": "Data Analyst Jobs India at TimesJobs located in India (multiple). Responsible for role-specific delivery and collaboration.",
+    "requirements": [
+      "Degree in Statistics, Math, CS or related field.",
+      "Proficiency in Python/R and SQL.",
+      "Experience with data cleaning and EDA.",
+      "Familiarity with ML frameworks and model evaluation.",
+      "Comfort with visualization tools like Tableau or Power BI."
+    ],
+    "responsibilities": [
+      "Collect and preprocess data for analysis.",
+      "Build models and produce insights for stakeholders.",
+      "Create dashboards and reports.",
+      "Monitor and improve model performance."
+    ],
+    "salary_min": 400000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Machine Learning",
+      "NumPy",
+      "Pandas",
+      "Python",
+      "SQL",
+      "Statistics"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.timesjobs.com/candidate/job-search.html?searchType=personalizedSearch&from=submit&txtKeywords=data+analyst",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Freshersworld - Internships in India",
+    "company": "Freshersworld",
+    "location": "India (multiple)",
+    "description": "Internships in India - Internship with Freshersworld in India (multiple). Hands-on exposure to domain work and mentorship.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.freshersworld.com/internship-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "LetsIntern - Internships India",
+    "company": "LetsIntern",
+    "location": "India (multiple)",
+    "description": "Internships India - Internship with LetsIntern in India (multiple). Hands-on exposure to domain work and mentorship.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.letsintern.com/internship/jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Shine.com - HR Jobs India",
+    "company": "Shine",
+    "location": "India (multiple)",
+    "description": "Shine.com - HR Jobs India at Shine located in India (multiple). Responsible for role-specific delivery and collaboration.",
+    "requirements": [
+      "Understanding of recruitment lifecycle and HR operations.",
+      "Good interpersonal and documentation skills.",
+      "Familiarity with HRMS/ATS is a plus."
+    ],
+    "responsibilities": [
+      "Manage recruitment tasks and candidate pipelines.",
+      "Assist onboarding and HR operations.",
+      "Coordinate employee engagement initiatives."
+    ],
+    "salary_min": 300000,
+    "salary_max": 900000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "HRMS",
+      "Interviewing",
+      "Recruitment"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.shine.com/job-search/hr-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Intelligence Bureau (IB) - MTS Recruitment 2025",
+    "company": "Ministry of Home Affairs (Govt of India)",
+    "location": "Pan-India",
+    "description": "Recruitment for 362 vacancies for the post of Multi-Tasking Staff (General) (MTS (G)). Group 'C', Non-Gazetted, Non-Ministerial post.",
+    "requirements": [
+      "Matriculation (10th pass) or equivalent from a recognized board.",
+      "Domicile certificate of the state against which candidate has applied.",
+      "Age Limit: 18-25 years (as on Dec 14, 2025)."
+    ],
+    "responsibilities": [
+      "General assistance and non-clerical work in the Intelligence Bureau.",
+      "Watch and ward duties.",
+      "Assisting in routine office work."
+    ],
+    "salary_min": 18000,
+    "salary_max": 56900,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["General Intelligence", "English Language", "Reasoning", "General Awareness"],
+    "benefits": "Central Govt Allowances, Special Security Allowance (20% of Basic Pay)",
+    "application_deadline": "2025-12-14",
+    "application_url": "https://www.mha.gov.in/",
+    "is_remote": false,
+    "posted_date": "2025-11-22",
+    "tag": "government",
+    "source": "official_notification"
+  },
+  {
+    "title": "TCS National Qualifier Test (NQT) - 2025 Batch",
+    "company": "Tata Consultancy Services",
+    "location": "Pan-India",
+    "description": "Mass hiring drive for freshers across India for Ninja and Digital profiles.",
+    "requirements": [
+      "B.E./B.Tech/M.E./M.Tech/MCA/M.Sc (2025 passing out batch).",
+      "No active backlogs.",
+      "Minimum 60% or 6 CGPA in academics."
+    ],
+    "responsibilities": [
+      "Software development and coding.",
+      "System maintenance and support.",
+      "Working on digital transformation projects."
+    ],
+    "salary_min": 336000,
+    "salary_max": 700000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Java", "C++", "Python", "SQL", "Communication"],
+    "benefits": "Health Insurance, Training Programs, Global Exposure",
+    "application_deadline": "Ongoing",
+    "application_url": "https://www.tcs.com/careers/india/tcs-nqt",
+    "is_remote": false,
+    "posted_date": "2025-11-01",
+    "tag": "job",
+    "source": "company_career_page"
+  },
+  {
+    "title": "Assistant Manager (Grade A) Recruitment 2025",
+    "company": "NABARD",
+    "location": "Pan-India",
+    "description": "Recruitment for 91 Assistant Manager positions in Rural Development Banking Service (RDBS).",
+    "requirements": [
+      "Bachelor's Degree in any subject with minimum 60% marks.",
+      "Specific degrees for specialist posts (Agriculture, Finance, IT).",
+      "Age: 21 to 30 years."
+    ],
+    "responsibilities": [
+      "Project appraisal and monitoring.",
+      "Policy implementation for rural development.",
+      "Credit planning and management."
+    ],
+    "salary_min": 1000000,
+    "salary_max": 1600000,
+    "currency": "INR",
+    "experience_level": "Fresher/Entry",
+    "employment_type": "Full-time",
+    "skills": ["Banking", "Agriculture Finance", "Reasoning", "Economics"],
+    "benefits": "Bank accommodation, Reimbursements, Pension (NPS)",
+    "application_deadline": "2025-11-30",
+    "application_url": "https://www.nabard.org/careers-notices.aspx",
+    "is_remote": false,
+    "posted_date": "2025-11-08",
+    "tag": "government",
+    "source": "official_notification"
+  },
+  {
+    "title": "Sr. WordPress Developer",
+    "company": "MyGov (Ministry of Electronics & IT)",
+    "location": "New Delhi / Remote possible",
+    "description": "Technical role for handling the MyGov platform infrastructure and CMS.",
+    "requirements": [
+      "B.Tech/B.E in Computer Science or MCA.",
+      "Strong experience in WordPress Core, themes, and plugin development.",
+      "Experience with PHP, MySQL, and REST APIs."
+    ],
+    "responsibilities": [
+      "Develop and maintain high-traffic government portals.",
+      "Optimize website performance and security.",
+      "Collaborate with the content team for feature updates."
+    ],
+    "salary_min": 600000,
+    "salary_max": 1200000,
+    "currency": "INR",
+    "experience_level": "Mid-Senior",
+    "employment_type": "Contract",
+    "skills": ["WordPress", "PHP", "MySQL", "JavaScript", "HTML5"],
+    "benefits": "Work with Govt Impact",
+    "application_deadline": "2025-11-26",
+    "application_url": "https://www.mygov.in/work-at-mygov/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-12",
+    "tag": "job",
+    "source": "mygov_portal"
+  },
+  {
+    "title": "Software Engineering Intern - Summer 2026",
+    "company": "Google",
+    "location": "Bengaluru / Hyderabad",
+    "description": "Internship opportunity for students graduating in 2026 or 2027.",
+    "requirements": [
+      "Currently enrolled in an Associate, Bachelor's, or Master's degree program.",
+      "Experience with one or more general purpose programming languages.",
+      "Ability to speak and write in English fluently."
+    ],
+    "responsibilities": [
+      "Design, develop, test, deploy, maintain and improve software.",
+      "Manage individual project priorities, deadlines and deliverables.",
+      "Collaborate with engineering teams."
+    ],
+    "salary_min": 50000,
+    "salary_max": 100000,
+    "currency": "INR",
+    "experience_level": "Internship",
+    "employment_type": "Internship",
+    "skills": ["C++", "Java", "Python", "Data Structures", "Algorithms"],
+    "benefits": "Stipend, Mentorship, Networking",
+    "application_deadline": "2025-12-15",
+    "application_url": "https://careers.google.com/jobs/",
+    "is_remote": false,
+    "posted_date": "2025-11-20",
+    "tag": "internship",
+    "source": "career_page"
+  },
+  {
+    "title": "System and Application Services Associate",
+    "company": "Accenture",
+    "location": "Bengaluru, Hyderabad, Pune, Mumbai, Chennai, Gurugram",
+    "description": "Entry-level role for freshers to work on application development and maintenance.",
+    "requirements": [
+      "B.Sc., BCA, BBA, B.A, B.Com, B.Voc (2024/2025 Batch).",
+      "No active backlogs.",
+      "Willing to work in 24/7 shifts."
+    ],
+    "responsibilities": [
+      "Identify and solve issues in applications.",
+      "Test and maintain software systems.",
+      "Support project teams in delivery."
+    ],
+    "salary_min": 300000,
+    "salary_max": 450000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Problem Solving", "Basic IT Knowledge", "Communication"],
+    "benefits": "Health Insurance, Transport",
+    "application_deadline": "Ongoing",
+    "application_url": "https://www.accenture.com/in-en/careers",
+    "is_remote": false,
+    "posted_date": "2025-11-21",
+    "tag": "job",
+    "source": "career_page"
+  },
+  {
+    "title": "Apple Retail - Specialist",
+    "company": "Apple",
+    "location": "Mumbai / Delhi / Bengaluru",
+    "description": "Front-end retail role connecting customers with Apple products.",
+    "requirements": [
+      "Strong interest in technology and Apple products.",
+      "Excellent communication and interpersonal skills.",
+      "Ability to work flexible hours."
+    ],
+    "responsibilities": [
+      "Understand customer needs and recommend solutions.",
+      "Provide technical support and product demonstrations.",
+      "Maintain store visuals and inventory."
+    ],
+    "salary_min": 500000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Entry",
+    "employment_type": "Full-time/Part-time",
+    "skills": ["Customer Service", "Sales", "Communication", "Tech Savvy"],
+    "benefits": "Stock grants, Health benefits, Product discounts",
+    "application_deadline": null,
+    "application_url": "https://jobs.apple.com/en-in/search?location=india-INDC",
+    "is_remote": false,
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "company_career_page"
+  },
+  {
+    "title": "Analyst - Financial Services",
+    "company": "Deloitte",
+    "location": "Hyderabad / Bengaluru",
+    "description": "Role within the Risk and Financial Advisory team.",
+    "requirements": [
+      "B.Com / MBA (Finance) / BBA.",
+      "Strong analytical and problem-solving skills.",
+      "Proficiency in MS Excel and PowerPoint."
+    ],
+    "responsibilities": [
+      "Analyze financial data and prepare reports.",
+      "Assist in audit and compliance tasks.",
+      "Collaborate with global teams on risk assessments."
+    ],
+    "salary_min": 450000,
+    "salary_max": 750000,
+    "currency": "INR",
+    "experience_level": "Entry",
+    "employment_type": "Full-time",
+    "skills": ["Finance", "Accounting", "Risk Management", "Excel"],
+    "benefits": "Comprehensive benefits package",
+    "application_deadline": null,
+    "application_url": "https://www2.deloitte.com/in/en/careers.html",
+    "is_remote": false,
+    "posted_date": "2025-11-22",
+    "tag": "job",
+    "source": "career_page"
+  },
+  {
+    "title": "Northern Railway Apprentice Recruitment",
+    "company": "Indian Railways (RRC NR)",
+    "location": "Northern India",
+    "description": "Training positions for 4,116 apprentice posts across multiple trades.",
+    "requirements": [
+      "Class 10 with ITI certification in relevant trade.",
+      "Age: 15 to 24 years."
+    ],
+    "responsibilities": [
+      "Undergo training in designated trade (Fitter, Electrician, etc.).",
+      "Assist in maintenance and repair workshops."
+    ],
+    "salary_min": 7000,
+    "salary_max": 10000,
+    "currency": "INR",
+    "experience_level": "Trainee",
+    "employment_type": "Apprenticeship",
+    "skills": ["Technical Trade", "Mechanical", "Electrical"],
+    "benefits": "Certificate of Apprenticeship (NAC)",
+    "application_deadline": "2025-11-24",
+    "application_url": "https://www.rrcnr.org/",
+    "is_remote": false,
+    "posted_date": "2025-10-24",
+    "tag": "government",
+    "source": "official_notification"
+  },
+  {
+    "title": "AI/ML Engineer",
+    "company": "Tranzmeo",
+    "location": "Kochi (Infopark)",
+    "description": "Development of AI models for industrial automation.",
+    "requirements": [
+      "Proficiency in Python, TensorFlow, PyTorch.",
+      "Experience with Computer Vision and NLP.",
+      "B.Tech/M.Tech in CS or related field."
+    ],
+    "responsibilities": [
+      "Design and implement machine learning models.",
+      "Optimize models for deployment.",
+      "Work on data preprocessing and pipeline creation."
+    ],
+    "salary_min": 600000,
+    "salary_max": 1800000,
+    "currency": "INR",
+    "experience_level": "Mid-Senior",
+    "employment_type": "Full-time",
+    "skills": ["Python", "Machine Learning", "Deep Learning", "Computer Vision"],
+    "benefits": "Startup culture, ESOPs",
+    "application_deadline": "2025-11-28",
+    "application_url": "https://infopark.in/companies/job-search",
+    "is_remote": false,
+    "posted_date": "2025-11-14",
+    "tag": "job",
+    "source": "infopark_portal"
+  },
+  {
+    "title": "Intern - Marketing & Business Development",
+    "company": "PhonePe",
+    "location": "Bengaluru",
+    "description": "Support the marketing team in executing campaigns and merchant acquisition.",
+    "requirements": [
+      "Undergraduate or Postgraduate student.",
+      "Good communication and negotiation skills.",
+      "Willingness to do field work if required."
+    ],
+    "responsibilities": [
+      "Assist in market research and competitor analysis.",
+      "Onboard merchants to the platform.",
+      "Track campaign performance metrics."
+    ],
+    "salary_min": 15000,
+    "salary_max": 25000,
+    "currency": "INR",
+    "experience_level": "Internship",
+    "employment_type": "Internship",
+    "skills": ["Marketing", "Sales", "Communication", "Data Analysis"],
+    "benefits": "Certificate, Pre-Placement Offer potential",
+    "application_deadline": "2025-12-05",
+    "application_url": "https://www.phonepe.com/careers/",
+    "is_remote": false,
+    "posted_date": "2025-11-23",
+    "tag": "internship",
+    "source": "unstop"
+  },
+  {
+    "title": "Software Development Engineer 1",
+    "company": "Amazon",
+    "location": "Bengaluru / Hyderabad / Chennai",
+    "description": "Core development role for Amazon's e-commerce or AWS platforms.",
+    "requirements": [
+      "Bachelor's degree in Computer Science or equivalent.",
+      "Proficiency in at least one modern programming language (Java, C++, C#).",
+      "Strong fundamentals in object-oriented design and data structures."
+    ],
+    "responsibilities": [
+      "Build scalable, high-performance software systems.",
+      "Participate in code reviews and design discussions.",
+      "Troubleshoot production issues."
+    ],
+    "salary_min": 1400000,
+    "salary_max": 2500000,
+    "currency": "INR",
+    "experience_level": "Entry/Mid",
+    "employment_type": "Full-time",
+    "skills": ["Java", "Distributed Systems", "AWS", "Algorithms"],
+    "benefits": "RSUs, Health Insurance, Relocation",
+    "application_deadline": null,
+    "application_url": "https://www.amazon.jobs/en-in/",
+    "is_remote": false,
+    "posted_date": "2025-11-20",
+    "tag": "job",
+    "source": "company_career_page"
+  },
+  {
+    "title": "Customer Support Executive (Voice/Non-Voice)",
+    "company": "Tech Mahindra",
+    "location": "Mumbai / Pune / Noida",
+    "description": "Handling customer queries for international/domestic clients.",
+    "requirements": [
+      "HSC (12th Pass) or Graduate.",
+      "Excellent verbal and written communication skills.",
+      "Basic computer knowledge."
+    ],
+    "responsibilities": [
+      "Resolve customer complaints via phone or chat.",
+      "Document interactions in CRM.",
+      "Adhere to SLA and quality standards."
+    ],
+    "salary_min": 200000,
+    "salary_max": 350000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Communication", "Customer Service", "Typing"],
+    "benefits": "Shift Allowances, Cabs",
+    "application_deadline": "Ongoing",
+    "application_url": "https://careers.techmahindra.com/",
+    "is_remote": false,
+    "posted_date": "2025-11-21",
+    "tag": "job",
+    "source": "foundit"
+  },
+  {
+    "title": "Remote Python/Django Developer",
+    "company": "Arc.dev Partner Companies",
+    "location": "Remote (India)",
+    "description": "Remote opportunities for senior developers with US/EU startups.",
+    "requirements": [
+      "3+ years of experience in Python and Django.",
+      "Experience with React or Vue.js on the frontend is a plus.",
+      "Strong English communication skills."
+    ],
+    "responsibilities": [
+      "Build RESTful APIs.",
+      "Integrate third-party services.",
+      "Work in an Agile remote environment."
+    ],
+    "salary_min": 1500000,
+    "salary_max": 4000000,
+    "currency": "INR",
+    "experience_level": "Senior",
+    "employment_type": "Contract/Full-time",
+    "skills": ["Python", "Django", "PostgreSQL", "Remote Work"],
+    "benefits": "USD Pay potential, Flexible hours",
+    "application_deadline": null,
+    "application_url": "https://arc.dev/remote-jobs",
+    "is_remote": true,
+    "posted_date": "2025-11-23",
+    "tag": "job",
+    "source": "arc_dev"
+  },
+  {
+    "title": "Project Research Scientist",
+    "company": "AIIMS (All India Institute of Medical Sciences)",
+    "location": "New Delhi",
+    "description": "Research position for ongoing medical projects.",
+    "requirements": [
+      "Post Graduate Degree in Life Sciences or related field.",
+      "Experience in clinical research is preferred."
+    ],
+    "responsibilities": [
+      "Conduct data collection and analysis.",
+      "Assist principal investigators in reporting.",
+      "Manage lab operations."
+    ],
+    "salary_min": 600000,
+    "salary_max": 800000,
+    "currency": "INR",
+    "experience_level": "Mid",
+    "employment_type": "Contract",
+    "skills": ["Research", "Life Sciences", "Data Analysis"],
+    "benefits": "Govt project norms",
+    "application_deadline": "2025-11-27",
+    "application_url": "https://www.aiims.edu/",
+    "is_remote": false,
+    "posted_date": "2025-11-10",
+    "tag": "government",
+    "source": "official_notification"
+  },
+  {
+    "title": "Infosys - System Engineer (Freshers)",
+    "company": "Infosys",
+    "location": "Pan-India",
+    "description": "Entry-level engineering role for fresh graduates.",
+    "requirements": [
+      "B.E./B.Tech/M.E./M.Tech/MCA/M.Sc.",
+      "No active backlogs.",
+      "Analytical and problem-solving skills."
+    ],
+    "responsibilities": [
+      "Software coding and testing.",
+      "Documentation of code and functionality.",
+      "Continuous learning of new technologies."
+    ],
+    "salary_min": 360000,
+    "salary_max": 600000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Coding", "Java", "Python", "SQL"],
+    "benefits": "Training at Mysore Campus, Health Insurance",
+    "application_deadline": "Ongoing",
+    "application_url": "https://www.infosys.com/careers/",
+    "is_remote": false,
+    "posted_date": "2025-11-24",
+    "tag": "job",
+    "source": "company_career_page"
+  },
+  {
+    "title": "Business Development Executive",
+    "company": "2Base Technologies Pvt Ltd",
+    "location": "Kochi (Infopark)",
+    "description": "Sales and client acquisition role for an IT services company.",
+    "requirements": [
+      "MBA or BBA graduate.",
+      "Excellent communication and presentation skills.",
+      "Understanding of IT service selling."
+    ],
+    "responsibilities": [
+      "Lead generation and cold calling.",
+      "Client meetings and requirement gathering.",
+      "Proposal preparation."
+    ],
+    "salary_min": 240000,
+    "salary_max": 480000,
+    "currency": "INR",
+    "experience_level": "Entry",
+    "employment_type": "Full-time",
+    "skills": ["Sales", "Lead Generation", "CRM", "Communication"],
+    "benefits": "Incentives, Travel Allowance",
+    "application_deadline": "2025-11-24",
+    "application_url": "https://infopark.in/companies/job-search",
+    "is_remote": false,
+    "posted_date": "2025-11-12",
+    "tag": "job",
+    "source": "infopark_portal"
+  },
+  {
+    "title": "Internshala - 10,000+ Active Internships",
+    "company": "Multiple Companies via Internshala",
+    "location": "Pan-India / Remote",
+    "description": "Aggregated access to internships in Marketing, Design, Web Dev, Content Writing, and more.",
+    "requirements": [
+      "Varies by employer (Students/Freshers).",
+      "Availability for 2-6 months."
+    ],
+    "responsibilities": [
+      "Varies by role (Social Media, Coding, Data Entry, etc.)."
+    ],
+    "salary_min": 0,
+    "salary_max": 30000,
+    "currency": "INR",
+    "experience_level": "Internship",
+    "employment_type": "Internship",
+    "skills": ["Varies"],
+    "benefits": "Certificates, Stipends",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "internship_aggregator",
+    "source": "internshala"
+  },
+  {
+    "title": "Naukri.com - Data Science Jobs (2000+ Active)",
+    "company": "Multiple Companies via Naukri",
+    "location": "Pan-India",
+    "description": "Access to thousands of active Data Science and Analytics jobs updated daily.",
+    "requirements": [
+      "Degree in Stat/Math/CS.",
+      "Python, R, SQL proficiency."
+    ],
+    "responsibilities": [
+      "Data cleaning, modeling, and visualization.",
+      "Machine learning implementation."
+    ],
+    "salary_min": 400000,
+    "salary_max": 3000000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Full-time",
+    "skills": ["Python", "SQL", "Tableau", "Machine Learning"],
+    "benefits": "Varies by employer",
+    "application_deadline": null,
+    "application_url": "https://www.naukri.com/data-science-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job_aggregator",
+    "source": "naukri"
+  },
+  {
+    "title": "Foundit - Work From Home Jobs (500+ Active)",
+    "company": "Multiple Companies via Foundit",
+    "location": "Remote",
+    "description": "Aggregated list of verified remote jobs in Support, Tech, and Operations.",
+    "requirements": [
+      "Reliable internet connection.",
+      "Role-specific skills."
+    ],
+    "responsibilities": [
+      "Work independently from home location.",
+      "Coordinate via virtual tools."
+    ],
+    "salary_min": 200000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Full-time/Part-time",
+    "skills": ["Remote Communication", "Time Management"],
+    "benefits": "Work Life Balance",
+    "application_deadline": null,
+    "application_url": "https://www.foundit.in/search/work-from-home-jobs",
+    "is_remote": true,
+    "posted_date": "2025-11-25",
+    "tag": "job_aggregator",
+    "source": "foundit"
+  },
+  {
+    "title": "Unstop - Competitions & Hiring Challenges",
+    "company": "Multiple Companies (Flipkart, Walmart, L'Oreal)",
+    "location": "Online / Pan-India",
+    "description": "Platform for hiring challenges, hackathons, and case competitions leading to job offers.",
+    "requirements": [
+      "Student or Working Professional.",
+      "Competitive coding or business strategy skills."
+    ],
+    "responsibilities": [
+      "Solve problem statements.",
+      "Submit projects within deadlines."
+    ],
+    "salary_min": 600000,
+    "salary_max": 4500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Full-time/Internship",
+    "skills": ["Coding", "Strategy", "Innovation"],
+    "benefits": "PPOs, Cash Prizes",
+    "application_deadline": null,
+    "application_url": "https://unstop.com/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job_aggregator",
+    "source": "unstop"
+  },
+  {
+    "title": "LinkedIn - Software Engineer Jobs (15,000+ Active)",
+    "company": "Multiple Companies via LinkedIn",
+    "location": "Pan-India",
+    "description": "Comprehensive list of Software Engineering roles across India.",
+    "requirements": [
+      "Computer Science fundamentals.",
+      "Coding proficiency."
+    ],
+    "responsibilities": [
+      "Development lifecycle management.",
+      "Feature implementation."
+    ],
+    "salary_min": 300000,
+    "salary_max": 5000000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Full-time",
+    "skills": ["Full Stack", "Backend", "Frontend"],
+    "benefits": "Varies",
+    "application_deadline": null,
+    "application_url": "https://www.linkedin.com/jobs/search/?keywords=software%20engineer",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job_aggregator",
+    "source": "linkedin"
+  },
+  {
+    "title": "Instahyre - Premium Startup Jobs",
+    "company": "Multiple Startups (Cred, Swiggy, Zomato)",
+    "location": "Bengaluru / Delhi / Remote",
+    "description": "Curated jobs for high-growth startups.",
+    "requirements": [
+      "Product mindset.",
+      "High agency and ownership."
+    ],
+    "responsibilities": [
+      "Rapid prototyping.",
+      "Scaling systems."
+    ],
+    "salary_min": 800000,
+    "salary_max": 6000000,
+    "currency": "INR",
+    "experience_level": "Mid/Senior",
+    "employment_type": "Full-time",
+    "skills": ["React", "Node.js", "AWS", "Product Design"],
+    "benefits": "ESOPs, Flexible work",
+    "application_deadline": null,
+    "application_url": "https://www.instahyre.com/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job_aggregator",
+    "source": "instahyre"
+  },
+  {
+    "title": "Wellfound (AngelList) - Remote Startup Jobs",
+    "company": "Global Startups",
+    "location": "Remote (Global)",
+    "description": "Remote jobs for Indian talent in US/EU startups.",
+    "requirements": [
+      "Strong portfolio/GitHub.",
+      "Remote work capability."
+    ],
+    "responsibilities": [
+      "Global team collaboration.",
+      "Async communication."
+    ],
+    "salary_min": 1000000,
+    "salary_max": 8000000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Contract/Full-time",
+    "skills": ["Web3", "AI", "Full Stack"],
+    "benefits": "USD Payment",
+    "application_deadline": null,
+    "application_url": "https://wellfound.com/jobs",
+    "is_remote": true,
+    "posted_date": "2025-11-25",
+    "tag": "job_aggregator",
+    "source": "wellfound"
+  },
+  {
+    "title": "National Career Service (NCS) - Govt & Private",
+    "company": "Ministry of Labour & Employment",
+    "location": "Pan-India",
+    "description": "Government portal listing over 10 Lakh+ active vacancies.",
+    "requirements": [
+      "Varies (8th pass to PhD)."
+    ],
+    "responsibilities": [
+      "Varies by sector (Manufacturing, IT, Service)."
+    ],
+    "salary_min": 10000,
+    "salary_max": 200000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Full-time",
+    "skills": ["Varies"],
+    "benefits": "Govt Verified Listings",
+    "application_deadline": null,
+    "application_url": "https://www.ncs.gov.in/",
+    "is_remote": false,
+    "posted_date": "2025-11-25",
+    "tag": "job_aggregator",
+    "source": "ncs_portal"
+  },
+  {
+    "title": "Intelligence Bureau (IB) - MTS Recruitment 2025",
+    "company": "Ministry of Home Affairs",
+    "location": "Pan-India",
+    "description": "Recruitment for 362 vacancies for the post of Multi-Tasking Staff (General).",
+    "requirements": [
+      "Matriculation (10th pass) from a recognized board.",
+      "Domicile certificate of the applying state.",
+      "Age: 18-25 years."
+    ],
+    "responsibilities": [
+      "General assistance and non-clerical work.",
+      "Watch and ward duties.",
+      "Office support tasks."
+    ],
+    "salary_min": 18000,
+    "salary_max": 56900,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["General Intelligence", "Reasoning", "English Language"],
+    "benefits": "Central Govt Allowances, 20% Special Security Allowance",
+    "application_deadline": "2025-12-14",
+    "application_url": "https://www.mha.gov.in/",
+    "is_remote": false,
+    "posted_date": "2025-11-22",
+    "tag": "government",
+    "source": "official_notification"
+  },
+  {
+    "title": "Northern Railway Apprentice Recruitment (4,116 Posts)",
+    "company": "Indian Railways (RRC NR)",
+    "location": "New Delhi / Northern India",
+    "description": "Mass engagement of 4,116 apprentices across various trade workshops.",
+    "requirements": [
+      "Class 10th with minimum 50% marks.",
+      "ITI Certificate in relevant trade.",
+      "Age: 15-24 years."
+    ],
+    "responsibilities": [
+      "Undergo apprenticeship training in designated trade.",
+      "Assist in maintenance and repair workshops."
+    ],
+    "salary_min": 7000,
+    "salary_max": 10000,
+    "currency": "INR",
+    "experience_level": "Trainee",
+    "employment_type": "Apprenticeship",
+    "skills": ["Fitter", "Electrician", "Machinist", "Welder"],
+    "benefits": "Training Certificate (NAC), Railway pass",
+    "application_deadline": "2025-11-24",
+    "application_url": "https://www.rrcnr.org/",
+    "is_remote": false,
+    "posted_date": "2025-10-24",
+    "tag": "government_bulk",
+    "source": "official_notification"
+  },
+  {
+    "title": "Assistant Manager (Grade A) - 91 Vacancies",
+    "company": "NABARD",
+    "location": "Pan-India",
+    "description": "Recruitment for Assistant Manager in Rural Development Banking Service.",
+    "requirements": [
+      "Bachelor's Degree with 60% marks.",
+      "Specialized degree for specific posts (Agriculture/IT).",
+      "Age: 21-30 years."
+    ],
+    "responsibilities": [
+      "Policy implementation for rural development.",
+      "Credit monitoring and project appraisal."
+    ],
+    "salary_min": 1000000,
+    "salary_max": 1600000,
+    "currency": "INR",
+    "experience_level": "Entry/Mid",
+    "employment_type": "Full-time",
+    "skills": ["Banking", "Agriculture", "Economics", "Finance"],
+    "benefits": "Bank Accommodation, Reimbursements, Pension",
+    "application_deadline": "2025-11-30",
+    "application_url": "https://www.nabard.org/careers-notices.aspx",
+    "is_remote": false,
+    "posted_date": "2025-11-08",
+    "tag": "government",
+    "source": "official_notification"
+  },
+  {
+    "title": "Project Research Scientist",
+    "company": "AIIMS (New Delhi)",
+    "location": "New Delhi",
+    "description": "Research position for ongoing medical projects at AIIMS.",
+    "requirements": [
+      "Post Graduate Degree in Life Sciences.",
+      "Ph.D. is preferred for senior roles."
+    ],
+    "responsibilities": [
+      "Conduct clinical research and data analysis.",
+      "Manage laboratory operations."
+    ],
+    "salary_min": 600000,
+    "salary_max": 850000,
+    "currency": "INR",
+    "experience_level": "Mid-Senior",
+    "employment_type": "Contract",
+    "skills": ["Clinical Research", "Data Analysis", "Life Sciences"],
+    "benefits": "HRA, Medical benefits (project based)",
+    "application_deadline": "2025-11-27",
+    "application_url": "https://www.aiims.edu/",
+    "is_remote": false,
+    "posted_date": "2025-11-10",
+    "tag": "government",
+    "source": "official_notification"
+  },
+  {
+    "title": "Project Associate (Climate Policy)",
+    "company": "UNDP India",
+    "location": "New Delhi",
+    "description": "Support UNDP's climate policy initiatives and project implementation.",
+    "requirements": [
+      "Master's degree in Environmental Science or Policy.",
+      "2+ years of relevant experience."
+    ],
+    "responsibilities": [
+      "Research and policy analysis.",
+      "Stakeholder coordination and reporting."
+    ],
+    "salary_min": 900000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Mid",
+    "employment_type": "Contract",
+    "skills": ["Climate Change", "Policy Analysis", "Project Management"],
+    "benefits": "UN standard benefits",
+    "application_deadline": "2025-11-25",
+    "application_url": "https://www.undp.org/india/careers",
+    "is_remote": false,
+    "posted_date": "2025-11-10",
+    "tag": "development_sector",
+    "source": "undp_careers"
+  },
+  {
+    "title": "TCS National Qualifier Test (NQT) - 2025 Batch",
+    "company": "Tata Consultancy Services",
+    "location": "Pan-India",
+    "description": "Mass hiring drive (Ninja/Digital profiles) for fresh engineering graduates.",
+    "requirements": [
+      "B.E./B.Tech/M.E./M.Tech/MCA/M.Sc (2025 Batch).",
+      "No active backlogs.",
+      "Min 60% in academics."
+    ],
+    "responsibilities": [
+      "Software development and system maintenance.",
+      "Coding and testing applications."
+    ],
+    "salary_min": 336000,
+    "salary_max": 700000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Java", "C++", "Python", "SQL"],
+    "benefits": "Health Insurance, Training, Global Projects",
+    "application_deadline": "Ongoing",
+    "application_url": "https://www.tcs.com/careers/india/tcs-nqt",
+    "is_remote": false,
+    "posted_date": "2025-11-01",
+    "tag": "private_bulk",
+    "source": "tcs_careers"
+  },
+  {
+    "title": "Infosys - Specialist Programmer & Digital Specialist Engineer",
+    "company": "Infosys",
+    "location": "Bengaluru / Pune / Hyderabad",
+    "description": "Hiring for specialized technical roles for 2025/2026 batch freshers.",
+    "requirements": [
+      "B.E./B.Tech/M.E./M.Tech (CS/IT/Electronics).",
+      "Strong coding skills in one language."
+    ],
+    "responsibilities": [
+      "Product development and advanced coding.",
+      "Working on digital transformation projects."
+    ],
+    "salary_min": 600000,
+    "salary_max": 950000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Data Structures", "Algorithms", "Full Stack"],
+    "benefits": "Training, Certification Support",
+    "application_deadline": "Ongoing",
+    "application_url": "https://www.infosys.com/careers/",
+    "is_remote": false,
+    "posted_date": "2025-11-22",
+    "tag": "private_job",
+    "source": "offcampus_drive"
+  },
+  {
+    "title": "Senior Backend Engineer (Remote)",
+    "company": "Apollo.io",
+    "location": "Remote (India)",
+    "description": "Building sales intelligence platform backend systems.",
+    "requirements": [
+      "8+ years experience.",
+      "Strong proficiency in Ruby on Rails or similar backend tech.",
+      "Experience with distributed systems."
+    ],
+    "responsibilities": [
+      "Architect and scale backend services.",
+      "Mentor junior engineers."
+    ],
+    "salary_min": 3000000,
+    "salary_max": 6000000,
+    "currency": "INR",
+    "experience_level": "Senior",
+    "employment_type": "Full-time",
+    "skills": ["Ruby", "Distributed Systems", "PostgreSQL"],
+    "benefits": "Remote work, Stock options, USD pegged salary potential",
+    "application_deadline": null,
+    "application_url": "https://www.apollo.io/careers",
+    "is_remote": true,
+    "posted_date": "2025-11-20",
+    "tag": "startup_remote",
+    "source": "topstartups_io"
+  },
+  {
+    "title": "Technical Program Manager",
+    "company": "Fictiv",
+    "location": "Bengaluru",
+    "description": "Managing digital manufacturing programs and North America support.",
+    "requirements": [
+      "7+ years experience in program management.",
+      "Background in manufacturing or hardware tech."
+    ],
+    "responsibilities": [
+      "Coordinate between engineering and product teams.",
+      "Ensure timely delivery of manufacturing projects."
+    ],
+    "salary_min": 2000000,
+    "salary_max": 3500000,
+    "currency": "INR",
+    "experience_level": "Senior",
+    "employment_type": "Full-time",
+    "skills": ["Program Management", "Manufacturing", "Agile"],
+    "benefits": "Global exposure, Health benefits",
+    "application_deadline": null,
+    "application_url": "https://www.fictiv.com/careers",
+    "is_remote": false,
+    "posted_date": "2025-11-23",
+    "tag": "private_job",
+    "source": "topstartups_io"
+  },
+  {
+    "title": "Software Engineer (Backend)",
+    "company": "CoinTracker",
+    "location": "Remote (India)",
+    "description": "Backend role for cryptocurrency portfolio tracking platform.",
+    "requirements": [
+      "Strong experience in Python or Go.",
+      "Knowledge of blockchain technology is a plus."
+    ],
+    "responsibilities": [
+      "Build secure and scalable APIs.",
+      "Integrate with various crypto exchanges."
+    ],
+    "salary_min": 2500000,
+    "salary_max": 5000000,
+    "currency": "INR",
+    "experience_level": "Mid/Senior",
+    "employment_type": "Full-time",
+    "skills": ["Python", "Go", "Blockchain", "API"],
+    "benefits": "Remote first, Crypto payments available",
+    "application_deadline": null,
+    "application_url": "https://www.cointracker.io/careers",
+    "is_remote": true,
+    "posted_date": "2025-11-24",
+    "tag": "startup_remote",
+    "source": "ycombinator_jobs"
+  },
+  {
+    "title": "Internship Scheme 2025",
+    "company": "DPIIT (Ministry of Commerce & Industry)",
+    "location": "New Delhi / Hybrid",
+    "description": "Govt internship for students in Engineering, Management, Law, and Economics.",
+    "requirements": [
+      "Pursuing UG/PG/Research in relevant domain.",
+      "Available for 1-3 months."
+    ],
+    "responsibilities": [
+      "Research on industrial policy.",
+      "Assist in departmental work."
+    ],
+    "salary_min": 10000,
+    "salary_max": 10000,
+    "currency": "INR",
+    "experience_level": "Internship",
+    "employment_type": "Internship",
+    "skills": ["Research", "Policy Analysis", "Writing"],
+    "benefits": "Experience Certificate, Stipend",
+    "application_deadline": "Ongoing",
+    "application_url": "https://dpiit.gov.in/internship/internship-scheme.php",
+    "is_remote": "depends",
+    "posted_date": "2025-11-01",
+    "tag": "internship",
+    "source": "official_scheme"
+  },
+  {
+    "title": "Data Science / ML Intern",
+    "company": "Western Digital",
+    "location": "Bengaluru",
+    "description": "Internship for 2025/2026 batch students in Data Science.",
+    "requirements": [
+      "B.E/B.Tech in CS/IT.",
+      "Knowledge of Python, ML algorithms, and SQL."
+    ],
+    "responsibilities": [
+      "Analyze large datasets.",
+      "Build and test ML models."
+    ],
+    "salary_min": 25000,
+    "salary_max": 45000,
+    "currency": "INR",
+    "experience_level": "Internship",
+    "employment_type": "Internship",
+    "skills": ["Machine Learning", "Python", "Data Mining"],
+    "benefits": "Mentorship, Pre-Placement Offer potential",
+    "application_deadline": "2025-11-30",
+    "application_url": "https://jobs.westerndigital.com/",
+    "is_remote": false,
+    "posted_date": "2025-11-22",
+    "tag": "internship",
+    "source": "offcampus_jobs"
+  },
+  {
+    "title": "Accounts Receivable Associate",
+    "company": "Dialpad",
+    "location": "Bengaluru",
+    "description": "Finance operations role in an AI-powered communications company.",
+    "requirements": [
+      "4+ years experience in finance/accounts.",
+      "Commerce background preferred."
+    ],
+    "responsibilities": [
+      "Manage billing and collections.",
+      "Reconcile customer accounts."
+    ],
+    "salary_min": 600000,
+    "salary_max": 1000000,
+    "currency": "INR",
+    "experience_level": "Mid",
+    "employment_type": "Full-time",
+    "skills": ["Accounting", "Excel", "Netsuite"],
+    "benefits": "Health insurance, Stock options",
+    "application_deadline": null,
+    "application_url": "https://www.dialpad.com/careers/",
+    "is_remote": false,
+    "posted_date": "2025-11-25",
+    "tag": "private_job",
+    "source": "topstartups_io"
+  },
+  {
+    "title": "PSSSB Group D Recruitment (331 Posts)",
+    "company": "Punjab Subordinate Services Selection Board",
+    "location": "Punjab",
+    "description": "Recruitment for Sewadar, Chowkidar, and other Group D posts.",
+    "requirements": [
+      "Matriculation (10th) with Punjabi.",
+      "Age: 18-37 years."
+    ],
+    "responsibilities": [
+      "Support staff duties in state government offices.",
+      "Maintenance and general services."
+    ],
+    "salary_min": 18000,
+    "salary_max": 40000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Punjabi Language", "Basic Service"],
+    "benefits": "State Govt Benefits",
+    "application_deadline": "Registration Open",
+    "application_url": "https://sssb.punjab.gov.in/",
+    "is_remote": false,
+    "posted_date": "2025-11-20",
+    "tag": "government",
+    "source": "state_notification"
+  },
+  {
+    "title": "UNICEF Internship Programme",
+    "company": "UNICEF India",
+    "location": "New Delhi / Multiple Cities",
+    "description": "Internship opportunities for students and recent graduates in humanitarian sectors.",
+    "requirements": [
+      "Enrolled in UG/PG or graduated within 2 years.",
+      "Fluency in English."
+    ],
+    "responsibilities": [
+      "Assist in program planning and monitoring.",
+      "Support communication and advocacy campaigns."
+    ],
+    "salary_min": 10000,
+    "salary_max": 15000,
+    "currency": "INR",
+    "experience_level": "Internship",
+    "employment_type": "Internship",
+    "skills": ["Social Work", "Communication", "Research"],
+    "benefits": "Stipend, Contribution to travel costs",
+    "application_deadline": "Ongoing",
+    "application_url": "https://www.unicef.org/careers/internships",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "unicef_careers"
+  },
+  {
+    "title": "Custom Software Engineer (Freshers)",
+    "company": "Accenture",
+    "location": "Pan-India",
+    "description": "Hiring for Custom Software Engineering roles for 2024/2025 batch.",
+    "requirements": [
+      "B.E./B.Tech/MCA.",
+      "Basic understanding of SDLC and coding."
+    ],
+    "responsibilities": [
+      "Design and develop custom software solutions.",
+      "Debug and troubleshoot applications."
+    ],
+    "salary_min": 450000,
+    "salary_max": 650000,
+    "currency": "INR",
+    "experience_level": "Fresher",
+    "employment_type": "Full-time",
+    "skills": ["Java", ".NET", "SQL", "Communication"],
+    "benefits": "Health benefits, Learning resources",
+    "application_deadline": "Ongoing",
+    "application_url": "https://www.accenture.com/in-en/careers",
+    "is_remote": false,
+    "posted_date": "2025-11-22",
+    "tag": "private_job",
+    "source": "career_page"
+  },
+  {
+    "title": "MEA Internship Programme 2025-26",
+    "company": "Ministry of External Affairs",
+    "location": "New Delhi",
+    "description": "Internship for exploring foreign policy and diplomacy.",
+    "requirements": [
+      "Graduate degree holder or Final year student.",
+      "Age < 25 years."
+    ],
+    "responsibilities": [
+      "Research on international relations.",
+      "Assist divisions in MEA headquarters."
+    ],
+    "salary_min": 10000,
+    "salary_max": 10000,
+    "currency": "INR",
+    "experience_level": "Internship",
+    "employment_type": "Internship",
+    "skills": ["International Relations", "Research", "Diplomacy"],
+    "benefits": "Honorarium of INR 10k, Logistics support",
+    "application_deadline": "Check Portal",
+    "application_url": "https://internship.mea.gov.in/",
+    "is_remote": false,
+    "posted_date": "2025-11-18",
+    "tag": "internship",
+    "source": "official_portal"
+  },
+  {
+    "title": "Internshala - Summer Internships 2025",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Grand Internship Carnival 2025",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for internship opportunities (campaign) at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 80000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": "2025-10-23",
+    "application_url": "https://internshala.com/grand-internship-carnival/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Work From Home Internships",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for remote internships at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 30000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/work-from-home-internships/",
+    "is_remote": "yes",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Bangalore",
+    "company": "Internshala",
+    "location": "Bangalore, Karnataka",
+    "description": "Listing page / category for internship opportunities in Bangalore at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-bangalore/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Delhi",
+    "company": "Internshala",
+    "location": "Delhi",
+    "description": "Listing page / category for internship opportunities in Delhi at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-delhi/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Hyderabad",
+    "company": "Internshala",
+    "location": "Hyderabad, Telangana",
+    "description": "Listing page / category for internship opportunities in Hyderabad at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-hyderabad/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Mumbai",
+    "company": "Internshala",
+    "location": "Mumbai, Maharashtra",
+    "description": "Listing page / category for internship opportunities in Mumbai at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-mumbai/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Chennai",
+    "company": "Internshala",
+    "location": "Chennai, Tamil Nadu",
+    "description": "Listing page / category for internship opportunities in Chennai at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-chennai/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Pune",
+    "company": "Internshala",
+    "location": "Pune, Maharashtra",
+    "description": "Listing page / category for internship opportunities in Pune at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-pune/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Kolkata",
+    "company": "Internshala",
+    "location": "Kolkata, West Bengal",
+    "description": "Listing page / category for internship opportunities in Kolkata at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-kolkata/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Internships in Jaipur",
+    "company": "Internshala",
+    "location": "Jaipur, Rajasthan",
+    "description": "Listing page / category for internship opportunities in Jaipur at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to learn quickly and take direction from mentors.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and regular check-ins."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects.",
+      "Support team members with research and execution.",
+      "Attend training and feedback sessions.",
+      "Document work and present progress periodically."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Communication",
+      "MS Office",
+      "Teamwork"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/internship-in-jaipur/",
+    "is_remote": "no",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Internshala - Part Time Internships",
+    "company": "Internshala",
+    "location": "Pan-India",
+    "description": "Listing page / category for part-time internship opportunities at Internshala. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Currently enrolled in a relevant degree or recently graduated.",
+      "Ability to manage time effectively between work and academics.",
+      "Basic familiarity with domain-relevant tools and concepts.",
+      "Good written and verbal communication skills.",
+      "Availability for internship duration and task deadlines."
+    ],
+    "responsibilities": [
+      "Assist in assigned tasks and small projects during available hours.",
+      "Support team members with research and execution tasks.",
+      "Attend periodic check-ins and training sessions.",
+      "Document work and progress reports.",
+      "Communicate progress and challenges to mentor regularly."
+    ],
+    "salary_min": 0,
+    "salary_max": 12000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Part-time",
+    "skills": [
+      "Time Management",
+      "Communication",
+      "Basic Tech Skills"
+    ],
+    "benefits": "Learning support, flexible hours (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://internshala.com/internships/part-time-jobs/",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "internship",
+    "source": "real"
+  },
+  {
+    "title": "Indeed - Data Scientist jobs in Chennai",
+    "company": "Indeed",
+    "location": "Chennai, Tamil Nadu",
+    "description": "Listing page / category for job opportunities at Indeed. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Degree in Statistics, Mathematics, Computer Science or related field.",
+      "Proficiency in Python/R and SQL.",
+      "Experience with data analysis, cleaning, and visualization.",
+      "Familiarity with machine learning frameworks and model evaluation.",
+      "Strong problem-solving skills and statistics knowledge."
+    ],
+    "responsibilities": [
+      "Collect, clean and preprocess large datasets for analysis.",
+      "Build and validate predictive models and algorithms.",
+      "Visualize and present results to stakeholders.",
+      "Collaborate with cross-functional teams to integrate solutions.",
+      "Monitor model performance and retrain as needed."
+    ],
+    "salary_min": 500000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Python",
+      "SQL",
+      "Machine Learning",
+      "Statistics",
+      "Data Visualization"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.indeed.co.in/Data-Scientist-jobs-in-Chennai",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Indeed - Software Engineer jobs in Bangalore",
+    "company": "Indeed",
+    "location": "Bangalore, Karnataka",
+    "description": "Listing page / category for job opportunities at Indeed. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Bachelor's degree in Computer Science, Engineering or related discipline.",
+      "Strong programming skills in Java, Python, or C++.",
+      "Good understanding of data structures and algorithms.",
+      "Experience with web frameworks and REST APIs.",
+      "Familiarity with database technologies like SQL/NoSQL."
+    ],
+    "responsibilities": [
+      "Design, develop, test, and maintain software applications.",
+      "Collaborate in agile teams to deliver new features.",
+      "Write unit and integration tests to ensure code quality.",
+      "Debug and resolve technical issues and bottlenecks.",
+      "Participate in code reviews and knowledge sharing."
+    ],
+    "salary_min": 500000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Java",
+      "Python",
+      "SQL",
+      "REST APIs",
+      "Git"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.indeed.co.in/Software-Engineer-jobs-in-Bangalore",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "Indeed - Work From Home jobs in India",
+    "company": "Indeed",
+    "location": "India (remote)",
+    "description": "Listing page / category for job opportunities at Indeed. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Reliable internet connection and home office setup.",
+      "Self-motivated with good time management skills.",
+      "Strong communication skills and ability to collaborate remotely.",
+      "Proficiency in relevant tools/technologies for the role.",
+      "Experience in your field or domain is a plus."
+    ],
+    "responsibilities": [
+      "Perform assigned tasks remotely with minimal supervision.",
+      "Communicate regularly with team members and managers.",
+      "Manage time and deliverables effectively from home.",
+      "Attend virtual meetings and training sessions.",
+      "Document work and update progress in collaboration tools."
+    ],
+    "salary_min": 200000,
+    "salary_max": 1000000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Self-motivation",
+      "Communication",
+      "Time Management",
+      "Collaboration Tools"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://www.indeed.co.in/Work-From-Home-jobs-in-India",
+    "is_remote": "yes",
+    "posted_date": "2025-11-25",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "LinkedIn - Software Engineer jobs in India",
+    "company": "LinkedIn",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at LinkedIn. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Bachelor's degree in CS/Engineering or equivalent experience.",
+      "Strong programming skills in Python, Java, or C++.",
+      "Understanding of data structures and algorithms.",
+      "Experience with REST APIs and microservices.",
+      "Familiarity with Git and CI/CD workflows.",
+      "Knowledge of relational and NoSQL databases."
+    ],
+    "responsibilities": [
+      "Design, implement and maintain software features.",
+      "Write unit and integration tests; participate in code reviews.",
+      "Work with product and QA to ship reliable releases.",
+      "Troubleshoot and resolve production issues."
+    ],
+    "salary_min": 400000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Git",
+      "Java",
+      "JavaScript",
+      "Python",
+      "REST APIs",
+      "SQL"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://in.linkedin.com/jobs/software-engineer-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "LinkedIn - Data Scientist jobs in India",
+    "company": "LinkedIn",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at LinkedIn. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Master's or PhD in a quantitative field (preferred) or equivalent experience.",
+      "Strong programming skills in Python or R.",
+      "Experience building ML models and evaluating their performance.",
+      "Familiarity with SQL, big data technologies, and cloud services.",
+      "Excellent communication skills for presenting results."
+    ],
+    "responsibilities": [
+      "Collect and analyze data to identify trends and patterns.",
+      "Build predictive models and evaluate their performance.",
+      "Translate analytics outcomes into business insights.",
+      "Partner with cross-functional teams to implement data-driven solutions.",
+      "Ensure reproducibility and reliability of models and analyses."
+    ],
+    "salary_min": 400000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Machine Learning",
+      "Python",
+      "R",
+      "SQL",
+      "Data Visualization"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://in.linkedin.com/jobs/data-scientist-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job",
+    "source": "real"
+  },
+  {
+    "title": "LinkedIn - Digital Marketing jobs in India",
+    "company": "LinkedIn",
+    "location": "India (multiple)",
+    "description": "Listing page / category for job opportunities at LinkedIn. Visit the link to view current openings and apply.",
+    "requirements": [
+      "Bachelor's degree in CS/Engineering or equivalent experience.",
+      "Strong programming skills in Python, Java, or C++.",
+      "Understanding of data structures and algorithms.",
+      "Experience with REST APIs and microservices.",
+      "Familiarity with Git and CI/CD workflows.",
+      "Knowledge of relational and NoSQL databases."
+    ],
+    "responsibilities": [
+      "Design, implement and maintain software features.",
+      "Write unit and integration tests; participate in code reviews.",
+      "Work with product and QA to ship reliable releases.",
+      "Troubleshoot and resolve production issues."
+    ],
+    "salary_min": 400000,
+    "salary_max": 1500000,
+    "currency": "INR",
+    "experience_level": "Varies",
+    "employment_type": "Varies",
+    "skills": [
+      "Git",
+      "Java",
+      "JavaScript",
+      "Python",
+      "REST APIs",
+      "SQL"
+    ],
+    "benefits": "Health insurance, Paid leaves, Learning support (varies by employer)",
+    "application_deadline": null,
+    "application_url": "https://in.linkedin.com/jobs/software-engineer-jobs",
+    "is_remote": "depends",
+    "posted_date": "2025-11-25",
+    "tag": "job",
+    "source": "real"
+  }
+
+
+]

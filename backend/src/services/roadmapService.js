@@ -5,183 +5,260 @@
 
 import { logger } from '../utils/logger.js';
 
-/**
- * Generate a personalized 30/60/90 day roadmap
- */
-export function generateRoadmap(skillsMissing, skillsHave, roleName) {
+const PHASE_CONFIG = {
+  foundation: { idPrefix: 'm1', estimatedHours: 36, due: 'Day 30', label: 'First 30 Days: Build Foundation' },
+  depth: { idPrefix: 'm2', estimatedHours: 48, due: 'Day 60', label: 'Days 31-60: Deepen Expertise' },
+  polish: { idPrefix: 'm3', estimatedHours: 28, due: 'Day 90', label: 'Days 61-90: Job Ready' }
+};
+
+const PRIORITY_MAP = { 3: 'high', 2: 'medium', 1: 'low' };
+
+const canonicalize = (skill) => (skill || '').toLowerCase().trim();
+
+const parseImpact = (percentage) => {
+  if (!percentage) return 0;
+  const match = percentage.match(/(\d+)(?:-(\d+))?/);
+  if (!match) return 0;
+  const [, min, max] = match;
+  return parseInt(max || min, 10);
+};
+
+const buildResources = (skill, actions = [], stage = 'foundation') => {
+  const baseResources = [
+    `${skill} official documentation` ,
+    `${skill} ${stage === 'foundation' ? 'fundamentals' : stage === 'depth' ? 'project-based' : 'interview prep'} course (Udemy / Coursera)`,
+    `GitHub: star a reference project built with ${skill}`
+  ];
+
+  const actionResources = actions
+    .filter(Boolean)
+    .map(action => action.replace(/^Why now:\s*/i, '').trim());
+
+  return Array.from(new Set([...baseResources, ...actionResources])).slice(0, 4);
+};
+
+const buildGoal = (skill, stageConfig, stageKey) => {
+  const { idPrefix, estimatedHours } = stageConfig;
+  const plan = skill.plan;
+  const leverage = skill.leverage;
+  const priority = PRIORITY_MAP[skill.priority] || (skill.type === 'required' ? 'high' : 'medium');
+  const slugBase = skill.canonical || canonicalize(skill.skill);
+  const slug = `${idPrefix}-${slugBase}`
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase() || `${idPrefix}-${Math.random().toString(36).slice(2, 8)}`;
+
+  let description = stageKey === 'foundation'
+    ? `Establish strong ${skill.skill} fundamentals with guided learning sprints.`
+    : stageKey === 'depth'
+      ? `Apply ${skill.skill} in a production-style project and document best practices.`
+      : `Polish advanced ${skill.skill} skills and package outcomes for interviews.`;
+
+  if (plan?.actions?.length) {
+    description += ` ${plan.actions[0]}`;
+  }
+
+  if (leverage?.skill) {
+    description += ` Lean on your ${leverage.skill} (${leverage.level || 'existing experience'}) to ramp faster.`;
+  }
+
+  const timeline = plan?.timeframe || stageConfig.due;
+  const actions = plan?.actions || [];
+
+  return {
+    id: slug,
+    title: stageKey === 'foundation'
+      ? `Build ${skill.skill} fundamentals`
+      : stageKey === 'depth'
+        ? `Ship ${skill.skill} project`
+        : `Demonstrate ${skill.skill} expertise`,
+    description: description.trim(),
+    status: 'pending',
+    priority,
+    estimatedHours,
+    resources: buildResources(skill.skill, actions, stageKey),
+    timeline
+  };
+};
+
+const buildMilestone = (id, title, description, dueDate) => ({ id, title, description, dueDate });
+
+const enrichSkills = (skillsMissing = [], alignedRecommendations = [], careerPlan = []) => {
+  const recommendationMap = new Map(alignedRecommendations.map(item => [canonicalize(item.targetSkill), item]));
+  const planMap = new Map(careerPlan.map(item => [canonicalize(item.skill), item]));
+
+  return skillsMissing.map(skill => {
+    const canonicalSkill = canonicalize(skill.skill);
+    const plan = planMap.get(canonicalSkill);
+    const aligned = recommendationMap.get(canonicalSkill);
+    const leverage = plan?.leverage || aligned?.alignedWith?.[0] || null;
+    const salaryImpactScore = parseImpact(skill.salaryBoost?.percentage || skill.salaryBoost?.impact?.percentage);
+    const priorityWeight = (skill.priority || 1) * 60 + (skill.type === 'required' ? 40 : 10);
+    const leverageScore = leverage ? (leverage.proficiency || 0) : 0;
+
+    return {
+      ...skill,
+      canonical: canonicalSkill || `skill-${Math.random().toString(36).slice(2)}`,
+      plan,
+      aligned,
+      leverage,
+      score: priorityWeight + salaryImpactScore + leverageScore,
+    };
+  }).sort((a, b) => b.score - a.score);
+};
+
+const buildFocus = (skills, fallback, roleName) => {
+  if (!skills || skills.length === 0) return fallback;
+  const list = skills.map(s => s.skill).join(', ');
+  return `Close gaps in ${list} to accelerate readiness for ${roleName} opportunities.`;
+};
+
+export function generateRoadmap(skillsMissing, skillsHave, roleName, options = {}) {
   try {
-    // Prioritize skills by importance
-    const requiredSkills = skillsMissing.filter(s => s.type === 'required');
-    const preferredSkills = skillsMissing.filter(s => s.type === 'preferred');
-    const highValueSkills = skillsMissing
-      .filter(s => s.salaryBoost && s.priority > 60)
-      .sort((a, b) => b.priority - a.priority);
-    
-    // Month 1 (Days 1-30): Foundation & Required Skills
-    const month30 = {
-      title: 'First 30 Days: Build Foundation',
-      focus: 'Master core required skills and tools',
-      goals: [],
-      milestones: []
-    };
-    
-    // Add top 3 required skills or high-priority skills
-    const month1Skills = requiredSkills.length > 0 
-      ? requiredSkills.slice(0, 3)
-      : highValueSkills.slice(0, 3);
-    
-    month1Skills.forEach((skill, idx) => {
-      month30.goals.push({
-        id: `m1-${idx + 1}`,
-        title: `Learn ${skill.skill} fundamentals`,
-        description: `Complete beginner to intermediate ${skill.skill} courses and tutorials`,
-        status: 'pending',
-        priority: 'high',
-        estimatedHours: 40,
-        resources: [
-          `${skill.skill} official documentation`,
-          `Online course: ${skill.skill} for beginners`,
-          `Practice exercises and coding challenges`
-        ]
-      });
-    });
-    
-    month30.milestones.push({
-      id: 'm1-milestone',
-      title: 'Complete first project',
-      description: `Build a small project using ${month1Skills.map(s => s.skill).join(', ')}`,
-      dueDate: '30 days'
-    });
-    
-    // Month 2 (Days 31-60): Intermediate Skills & Projects
-    const month60 = {
-      title: 'Days 31-60: Deepen Knowledge',
-      focus: 'Apply skills in real projects and learn advanced concepts',
-      goals: [],
-      milestones: []
-    };
-    
-    // Add next set of skills (mix of required and preferred)
-    const month2Skills = [
-      ...requiredSkills.slice(3, 5),
-      ...preferredSkills.slice(0, 2)
-    ].filter(Boolean).slice(0, 3);
-    
-    if (month2Skills.length === 0) {
-      month2Skills.push(...highValueSkills.slice(3, 6));
+    const {
+      alignedRecommendations = [],
+      careerPlan = [],
+      strengths = [],
+      watsonAdvice = ''
+    } = options;
+
+    if (!Array.isArray(skillsMissing) || skillsMissing.length === 0) {
+      logger.warn('No missing skills found, using default roadmap');
+      return generateDefaultRoadmap();
     }
-    
-    month2Skills.forEach((skill, idx) => {
-      month60.goals.push({
-        id: `m2-${idx + 1}`,
-        title: `Master ${skill.skill}`,
-        description: `Build intermediate to advanced proficiency in ${skill.skill}`,
-        status: 'pending',
-        priority: 'high',
-        estimatedHours: 50,
-        resources: [
-          `${skill.skill} advanced tutorials`,
-          `Real-world project examples`,
-          `Best practices and design patterns`
-        ]
-      });
-    });
-    
-    month60.goals.push({
-      id: 'm2-project',
-      title: 'Portfolio project',
-      description: 'Build a comprehensive project showcasing your new skills',
+
+    const enriched = enrichSkills(skillsMissing, alignedRecommendations, careerPlan);
+
+    const foundationSkills = enriched.slice(0, Math.min(3, enriched.length));
+    const depthSkills = enriched.slice(foundationSkills.length, foundationSkills.length + Math.min(3, enriched.length - foundationSkills.length));
+    const polishSkills = enriched.slice(foundationSkills.length + depthSkills.length, foundationSkills.length + depthSkills.length + Math.min(3, enriched.length - foundationSkills.length - depthSkills.length));
+
+    const topStrengths = (strengths && strengths.length ? strengths : skillsHave)
+      .filter(s => (s.proficiency || 0) >= 65)
+      .sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
+      .slice(0, 2);
+
+    const month30 = {
+      title: PHASE_CONFIG.foundation.label,
+      focus: buildFocus(foundationSkills, `Master core ${roleName} skills and tools`, roleName),
+      goals: foundationSkills.map(skill => buildGoal(skill, PHASE_CONFIG.foundation, 'foundation')),
+      milestones: foundationSkills.length ? [
+        buildMilestone(
+          'm1-milestone',
+          'Ship a fundamentals project',
+          `Deliver a mini-project demonstrating ${foundationSkills.map(s => s.skill).join(', ')} basics`,
+          careerPlan.find(plan => canonicalize(plan.skill) === foundationSkills[0]?.canonical)?.timeframe || PHASE_CONFIG.foundation.due
+        )
+      ] : []
+    };
+
+    const month60Goals = depthSkills.map(skill => buildGoal(skill, PHASE_CONFIG.depth, 'depth'));
+    if (month60Goals.length === 0 && enriched.length > foundationSkills.length) {
+      const fallbackSkill = enriched[foundationSkills.length];
+      month60Goals.push(buildGoal(fallbackSkill, PHASE_CONFIG.depth, 'depth'));
+    }
+    month60Goals.push({
+      id: `${PHASE_CONFIG.depth.idPrefix}-capstone`,
+      title: 'Build a production-style capstone',
+      description: `Create a portfolio-ready project combining ${[...foundationSkills, ...depthSkills].map(s => s.skill).slice(0, 4).join(', ')}`,
       status: 'pending',
       priority: 'high',
-      estimatedHours: 60
+      estimatedHours: 60,
+      resources: buildResources('Capstone', depthSkills.map(skill => skill.plan?.actions?.[1]).filter(Boolean), 'depth')
     });
-    
-    month60.milestones.push({
-      id: 'm2-milestone',
-      title: 'Complete portfolio piece',
-      description: 'Publish a production-ready project demonstrating your skills',
-      dueDate: '60 days'
-    });
-    
-    // Month 3 (Days 61-90): Polish & Job Preparation
-    const month90 = {
-      title: 'Days 61-90: Job Ready',
-      focus: 'Polish portfolio, practice interviews, and apply to jobs',
-      goals: [],
-      milestones: []
+
+    const month60 = {
+      title: PHASE_CONFIG.depth.label,
+      focus: depthSkills.length
+        ? `Apply ${depthSkills.map(s => s.skill).join(', ')} in production-style projects`
+        : 'Scale from fundamentals into intermediate project work',
+      goals: month60Goals,
+      milestones: [
+        buildMilestone(
+          'm2-milestone',
+          'Publish your capstone',
+          'Deploy and document a project that you can reference in interviews',
+          PHASE_CONFIG.depth.due
+        )
+      ]
     };
-    
-    // Add remaining preferred skills and job prep
-    const month3Skills = preferredSkills.slice(2, 4);
-    
-    month3Skills.forEach((skill, idx) => {
-      month90.goals.push({
-        id: `m3-${idx + 1}`,
-        title: `Learn ${skill.skill}`,
-        description: `Add ${skill.skill} to enhance your skillset`,
+
+    const month90Goals = polishSkills.map(skill => buildGoal(skill, PHASE_CONFIG.polish, 'polish'));
+    if (month90Goals.length === 0) {
+      polishSkills.push(...enriched.slice(foundationSkills.length + depthSkills.length, foundationSkills.length + depthSkills.length + 1));
+      if (polishSkills[0]) {
+        month90Goals.push(buildGoal(polishSkills[0], PHASE_CONFIG.polish, 'polish'));
+      }
+    }
+
+    month90Goals.push(
+      {
+        id: `${PHASE_CONFIG.polish.idPrefix}-portfolio`,
+        title: 'Polish portfolio and narrative',
+        description: topStrengths.length
+          ? `Highlight projects using ${topStrengths.map(s => s.skill).join(' & ')} and align stories to ${roleName} interviews.`
+          : `Curate your top 3 projects and craft STAR stories tailored to ${roleName} interviews.`,
         status: 'pending',
-        priority: 'medium',
-        estimatedHours: 30,
+        priority: 'high',
+        estimatedHours: 24,
         resources: [
-          `${skill.skill} quick start guide`,
-          `Integration examples`,
-          `Community resources`
+          'Refresh LinkedIn & GitHub showcase',
+          'Document project case studies',
+          'Schedule peer review of portfolio'
         ]
-      });
-    });
-    
-    month90.goals.push(
-      {
-        id: 'm3-portfolio',
-        title: 'Optimize portfolio',
-        description: 'Polish GitHub profile, update LinkedIn, create resume website',
-        status: 'pending',
-        priority: 'high',
-        estimatedHours: 20
       },
       {
-        id: 'm3-interview',
-        title: 'Interview preparation',
-        description: 'Practice coding interviews, system design, and behavioral questions',
+        id: `${PHASE_CONFIG.polish.idPrefix}-interviews`,
+        title: 'Interview prep sprints',
+        description: 'Run weekly mock interviews (technical + behavioral) and refine system design playbook.',
         status: 'pending',
         priority: 'high',
-        estimatedHours: 40
+        estimatedHours: 32,
+        resources: [
+          'LeetCode / HackerRank weekly plan',
+          'System design frameworks (Grokking, Exponent)',
+          'Behavioral question bank'
+        ]
       },
       {
-        id: 'm3-apply',
-        title: 'Job applications',
-        description: `Apply to ${roleName} positions at target companies`,
+        id: `${PHASE_CONFIG.polish.idPrefix}-applications`,
+        title: 'Targeted job outreach',
+        description: `Apply to curated ${roleName} roles and network with 2-3 managers per week.`,
         status: 'pending',
         priority: 'high',
-        estimatedHours: 30
+        estimatedHours: 18,
+        resources: [
+          'Create a personalized outreach template',
+          'Track applications in Notion / Airtable'
+        ]
       }
     );
-    
-    month90.milestones.push(
-      {
-        id: 'm3-milestone-1',
-        title: 'Portfolio complete',
-        description: '3-5 production-ready projects showcasing all key skills',
-        dueDate: '75 days'
-      },
-      {
-        id: 'm3-milestone-2',
-        title: 'Start interviewing',
-        description: 'Schedule and complete first round of interviews',
-        dueDate: '90 days'
-      }
-    );
-    
-    logger.info(`Generated roadmap for ${roleName} with ${month30.goals.length + month60.goals.length + month90.goals.length} total goals`);
-    
+
+    const month90 = {
+      title: PHASE_CONFIG.polish.label,
+      focus: polishSkills.length
+        ? `Translate ${polishSkills.map(s => s.skill).join(', ')} into interview-ready stories`
+        : 'Consolidate wins, polish personal brand, and move into interviews',
+      goals: month90Goals,
+      milestones: [
+        buildMilestone('m3-milestone-1', 'Portfolio narrative locked', 'Have 3 story-driven projects ready for interviews', 'Day 75'),
+        buildMilestone('m3-milestone-2', 'Begin interview loop', 'Complete first round of interviews with target companies', 'Day 90')
+      ]
+    };
+
+    const totalGoals = month30.goals.length + month60.goals.length + month90.goals.length;
+    const estimatedTotalHours = calculateTotalHours(month30, month60, month90);
+
+    logger.info(`Generated roadmap for ${roleName}: ${totalGoals} goals, ${estimatedTotalHours} hrs`);
+
     return {
       month30,
       month60,
       month90,
-      totalGoals: month30.goals.length + month60.goals.length + month90.goals.length,
-      estimatedTotalHours: calculateTotalHours(month30, month60, month90)
+      totalGoals,
+      estimatedTotalHours,
+      narrative: watsonAdvice || ''
     };
-    
   } catch (error) {
     logger.error('Roadmap generation failed:', error);
     return generateDefaultRoadmap();

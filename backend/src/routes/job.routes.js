@@ -23,18 +23,29 @@ import {
 } from '../services/intelligentJobMatchingService.js';
 import { queueResumeEmbedding, queueJobEmbedding, getQueueStats, processQueue } from '../services/embeddingQueueService.js';
 import { loadSeedJobs, clearSeedJobs } from '../services/seedJobsService.js';
+import { importJobsFromJSON, importJobsFromCSV } from '../services/csvJobImportService.js';
+import { generateTagline, generateBio } from '../services/taglineService.js';
+import { analyzeStrengths } from '../services/softSkillsService.js';
 import Resume from '../models/Resume.js';
 import Job from '../models/Job.js';
 import JobMatch from '../models/JobMatch.js';
 import { logger } from '../utils/logger.js';
+import { loadJobsFromFile, reloadJobsFromFile, getJobsFilePath } from '../services/fileJobService.js';
+import { evaluateJobCompatibilityWithWatson, mapResumeToProfile } from '../services/watsonJobCompatibilityService.js';
 
 const router = express.Router();
 
 /**
- * POST /api/resume/:resumeId/analyze-role
- * Analyze resume and predict best job role with skill gaps
+ * NOTE: /api/resume/:resumeId/analyze-role endpoint moved to resume.routes.js
+ * to avoid conflicts and keep resume-related operations together.
  */
-router.post('/resume/:resumeId/analyze-role', async (req, res) => {
+
+/**
+ * POST /api/resume/:resumeId/analyze-role-fast
+ * Fast role analysis WITHOUT Watson AI (heuristic-only, <2 seconds)
+ * Use this when you need quick results without AI overhead
+ */
+router.post('/resume/:resumeId/analyze-role-fast', async (req, res) => {
   try {
     const { resumeId } = req.params;
     
@@ -47,67 +58,66 @@ router.post('/resume/:resumeId/analyze-role', async (req, res) => {
       });
     }
     
-    // Check if already analyzed (cache)
-    if (resume.job_analysis?.predictedRole && !req.query.force) {
-      const cacheAge = Date.now() - new Date(resume.job_analysis.analyzedAt).getTime();
-      const cacheMaxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+    const skills = resume.parsed_resume?.skills || [];
+    const experience = resume.parsed_resume?.years_experience || 0;
+    
+    if (skills.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Resume must have skills for analysis'
+      });
+    }
+    
+    // Fast heuristic role matching (no AI)
+    const roleScores = [];
+    for (const roleData of roles) {
+      const { role: roleName, requiredSkills = [], preferredSkills = [] } = roleData;
       
-      if (cacheAge < cacheMaxAge) {
-        logger.info(`Returning cached analysis for resume ${resumeId}`);
-        return res.json({
-          success: true,
-          cached: true,
-          data: resume.job_analysis,
-          metadata: {
-            cachedAt: resume.job_analysis.analyzedAt,
-            cacheAgeHours: Math.floor(cacheAge / (1000 * 60 * 60))
-          }
-        });
-      }
+      const coreMatches = requiredSkills.filter(skill => 
+        skills.some(s => s.toLowerCase().includes(skill.toLowerCase()))
+      );
+      
+      const score = (coreMatches.length / requiredSkills.length) * 100;
+      
+      roleScores.push({
+        name: roleName,
+        score,
+        coreMatches: coreMatches.length,
+        totalCore: requiredSkills.length
+      });
     }
     
-    // Step 1: Predict best role
-    logger.info(`Analyzing role for resume ${resumeId}`);
-    const rolePrediction = await predictBestRole(resume);
+    roleScores.sort((a, b) => b.score - a.score);
+    const topRole = roleScores[0];
     
-    // Step 2: Analyze skills for predicted role
-    const skillAnalysis = await analyzeSkills(resume, rolePrediction.primaryRole.name);
+    // Quick skill analysis
+    const roleData = getRoleByName(topRole.name);
+    const requiredSkills = roleData?.requiredSkills || [];
+    const skillsHave = requiredSkills.filter(skill => 
+      skills.some(s => s.toLowerCase().includes(skill.toLowerCase()))
+    );
+    const skillsMissing = requiredSkills.filter(skill => 
+      !skills.some(s => s.toLowerCase().includes(skill.toLowerCase()))
+    );
     
-    // Step 3: Save analysis to resume
-    resume.job_analysis = {
-      predictedRole: rolePrediction.primaryRole,
-      alternativeRoles: rolePrediction.alternativeRoles,
-      skillsHave: skillAnalysis.skillsHave,
-      skillsMissing: skillAnalysis.skillsMissing,
-      salaryBoostOpportunities: skillAnalysis.salaryBoostOpportunities.topOpportunities,
-      recommendations: skillAnalysis.recommendations,
-      roadmap: skillAnalysis.roadmap,
-      analyzedAt: new Date()
-    };
-    
-    // Update parsing metadata
-    if (!resume.parsing_metadata) {
-      resume.parsing_metadata = {};
-    }
-    resume.parsing_metadata.watsonCallCount = (resume.parsing_metadata.watsonCallCount || 0) + 
-      (rolePrediction.metadata.watsonUsed ? 1 : 0);
-    
-    await resume.save();
-    
-    // Step 4: Return combined results
     res.json({
       success: true,
-      cached: false,
+      fast: true,
       data: {
-        rolePrediction: rolePrediction,
-        skillAnalysis: skillAnalysis,
-        recommendations: skillAnalysis.recommendations,
-        roadmap: skillAnalysis.roadmap
+        predictedRole: {
+          name: topRole.name,
+          score: topRole.score,
+          matchPercentage: Math.round(topRole.score)
+        },
+        skillsHave,
+        skillsMissing,
+        totalSkills: skills.length,
+        processingTime: '<2s'
       }
     });
     
   } catch (error) {
-    logger.error('Role analysis failed:', error);
+    logger.error('Fast role analysis failed:', error);
     res.status(500).json({
       success: false,
       error: error.message
@@ -131,8 +141,10 @@ router.get('/jobs/match/:resumeId', async (req, res) => {
       includeRemote = true,
       employmentType = null,
       generateAISummaries = true,
-      useEmbeddings = false // NEW: Enable hybrid scoring
+      useEmbeddings = false, // Hybrid scoring toggle
+      verifyWithWatson = 'false'
     } = req.query;
+    const enforceWatson = verifyWithWatson === 'true';
     
     // Fetch resume
     const resume = await Resume.findOne({ resumeId: resumeId });
@@ -143,18 +155,31 @@ router.get('/jobs/match/:resumeId', async (req, res) => {
       });
     }
     
-    // Find matching jobs
-    logger.info(`Finding matching jobs for resume ${resumeId} (embeddings: ${useEmbeddings === 'true'})`);
-    const matchResult = await findMatchingJobs(resume, {
+    // Load CSV-backed job pool first so matches always reflect jobs.csv
+    const fileJobs = await loadJobsFromFile();
+    if (!fileJobs.length) {
+      logger.error('jobs.csv returned 0 records. Aborting match request to avoid non-curated sources.');
+      return res.status(503).json({
+        success: false,
+        error: 'jobs.csv feed is empty. Please upload at least one job entry before matching.'
+      });
+    }
+
+    logger.info(
+      `Finding matching jobs for resume ${resumeId} (embeddings: ${useEmbeddings === 'true'}, watson: ${enforceWatson}) using jobs.csv dataset`
+    );
+    let matchResult = await findMatchingJobs(resume, {
       limit: parseInt(limit),
       minMatchScore: parseInt(minMatchScore),
       includeRemote: includeRemote === 'true',
-      employmentType: employmentType,
+      employmentType,
       generateAISummaries: generateAISummaries === 'true',
       useEmbeddings: useEmbeddings === 'true', // Pass to service
       preferences: {
         minSalary: resume.parsed_data?.expectedSalary
-      }
+      },
+      verifyWithWatson: enforceWatson,
+      sourcePlatforms: ['file']
     });
     
     res.json({
@@ -164,6 +189,165 @@ router.get('/jobs/match/:resumeId', async (req, res) => {
     
   } catch (error) {
     logger.error('Job matching failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/jobs/file-feed
+ * Return jobs directly from backend/jobs.csv for quick card rendering
+ */
+router.get('/jobs/file-feed', async (req, res) => {
+  try {
+    const rawShape = req.query.shape === 'raw' || req.query.raw === 'true';
+    const jobsData = await loadJobsFromFile();
+    const total = jobsData.length;
+    const offsetParam = Math.max(parseInt(req.query.offset) || 0, 0);
+    const offset = Math.min(offsetParam, total);
+    const requestedLimit = Math.max(parseInt(req.query.limit) || 50, 1);
+    const slice = jobsData.slice(offset, Math.min(offset + requestedLimit, total));
+    const payload = rawShape
+      ? slice
+      : slice.map((job) => ({
+          id: job.jobId,
+          title: job.title,
+          company: job.company?.name,
+          location: job.location?.city,
+          salaryMin: job.salary?.min,
+          salaryMax: job.salary?.max,
+          currency: job.salary?.currency,
+          experienceLevel: job.experienceLevel,
+          employmentType: job.employmentType,
+          skills: job.skills?.allSkills || [],
+          description: job.description,
+          applicationUrl: job.applicationUrl,
+          tag: job.tag,
+          source: job.source?.platform
+        }));
+
+    res.json({
+      success: true,
+      total,
+      jobs: payload,
+      metadata: {
+        offset,
+        limit: payload.length,
+        filePath: 'backend/jobs.csv'
+      }
+    });
+  } catch (error) {
+    logger.error('Failed to read jobs.csv for file-feed:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Unable to load jobs from file feed'
+    });
+  }
+});
+
+/**
+ * GET /api/jobs/search
+ * Search jobs from jobs.csv with lightweight server-side filtering and optional resume compatibility
+ */
+router.get('/jobs/search', async (req, res) => {
+  try {
+    const {
+      q,
+      location,
+      employmentType,
+      experienceLevel,
+      isRemote,
+      tag,
+      skills,
+      offset = 0,
+      limit = 20,
+      resumeId
+    } = req.query;
+
+    const jobsData = await loadJobsFromFile();
+    let filtered = jobsData;
+
+    if (q) {
+      const query = q.toLowerCase();
+      filtered = filtered.filter(job =>
+        job.title.toLowerCase().includes(query) ||
+        job.company?.name?.toLowerCase().includes(query) ||
+        job.description?.toLowerCase().includes(query)
+      );
+    }
+
+    if (location) {
+      const city = location.toLowerCase();
+      filtered = filtered.filter(job => job.location?.city?.toLowerCase().includes(city));
+    }
+
+    if (employmentType) {
+      filtered = filtered.filter(job => job.employmentType === employmentType);
+    }
+
+    if (experienceLevel) {
+      filtered = filtered.filter(job => job.experienceLevel === experienceLevel);
+    }
+
+    if (isRemote === 'true') {
+      filtered = filtered.filter(job => job.location?.isRemote);
+    } else if (isRemote === 'false') {
+      filtered = filtered.filter(job => !job.location?.isRemote);
+    }
+
+    if (tag) {
+      filtered = filtered.filter(job => job.tag === tag);
+    }
+
+    if (skills) {
+      const skillList = skills
+        .split(',')
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean);
+      if (skillList.length) {
+        filtered = filtered.filter(job =>
+          skillList.every(skill => job.skills?.allSkills?.includes(skill))
+        );
+      }
+    }
+
+    const maxLimit = Math.min(parseInt(limit) || 20, 50);
+    let cursor = Math.max(parseInt(offset) || 0, 0);
+    const total = filtered.length;
+    const results = [];
+
+    let resumeProfile = null;
+    if (resumeId) {
+      const resume = await Resume.findOne({ resumeId });
+      resumeProfile = mapResumeToProfile(resume);
+    }
+
+    while (cursor < total && results.length < maxLimit) {
+      const job = filtered[cursor];
+      cursor++;
+
+      if (resumeProfile) {
+        const compatibility = await evaluateJobCompatibilityWithWatson(resumeProfile, job);
+        job.compatibility = compatibility;
+        if (!compatibility.compatible) {
+          continue;
+        }
+      }
+
+      results.push(job);
+    }
+
+    res.json({
+      success: true,
+      total,
+      returned: results.length,
+      nextOffset: cursor < total ? cursor : null,
+      jobs: results
+    });
+  } catch (error) {
+    logger.error('Job search failed:', error);
     res.status(500).json({
       success: false,
       error: error.message
@@ -552,6 +736,253 @@ router.post('/admin/seed-jobs', async (req, res) => {
     res.json(result);
   } catch (error) {
     logger.error('Failed to load seed jobs:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/admin/import-jobs-json
+ * Import jobs from JSON file (admin only)
+ */
+router.post('/admin/import-jobs-json', async (req, res) => {
+  try {
+    const { filePath } = req.body;
+    
+    if (!filePath) {
+      return res.status(400).json({
+        success: false,
+        error: 'filePath is required'
+      });
+    }
+    
+    const result = await importJobsFromJSON(filePath);
+    res.json(result);
+  } catch (error) {
+    logger.error('Failed to import jobs from JSON:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/admin/import-jobs-csv
+ * Import jobs from CSV file (admin only)
+ */
+router.post('/admin/import-jobs-csv', async (req, res) => {
+  try {
+    const { filePath } = req.body;
+    
+    if (!filePath) {
+      return res.status(400).json({
+        success: false,
+        error: 'filePath is required'
+      });
+    }
+    
+    const result = await importJobsFromCSV(filePath);
+    res.json(result);
+  } catch (error) {
+    logger.error('Failed to import jobs from CSV:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/admin/reload-file-jobs
+ * Purge Job collection and reload from backend/jobs.csv
+ */
+router.post('/admin/reload-file-jobs', async (_req, res) => {
+  try {
+    const result = await reloadJobsFromFile();
+    res.json({
+      success: true,
+      message: `Reloaded ${result.inserted} jobs from ${getJobsFilePath()}`,
+      data: result
+    });
+  } catch (error) {
+    logger.error('Failed to reload jobs from csv file:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/jobs/list
+ * List all jobs with advanced filtering and sorting
+ * Query params:
+ *   - page: Page number (default: 1)
+ *   - limit: Jobs per page (default: 20)
+ *   - search: Search in title, company, description
+ *   - location: Filter by city/state
+ *   - employmentType: Filter by employment type (full-time, part-time, contract, internship, freelance)
+ *   - experienceLevel: Filter by experience level (entry, mid, senior, lead, executive)
+ *   - isRemote: Filter remote jobs (true/false)
+ *   - tag: Filter by tag (internship, job, etc)
+ *   - company: Filter by company name
+ *   - salaryMin: Minimum salary
+ *   - salaryMax: Maximum salary
+ *   - skills: Comma-separated skills to match
+ *   - sortBy: Sort field (postedDate, salary, title, company)
+ *   - sortOrder: Sort direction (asc, desc) - default: desc
+ */
+router.get('/jobs/list', async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 20,
+      search,
+      location,
+      employmentType,
+      experienceLevel,
+      isRemote,
+      tag,
+      company,
+      salaryMin,
+      salaryMax,
+      skills,
+      sortBy = 'postedDate',
+      sortOrder = 'desc'
+    } = req.query;
+    
+    // Build filter query
+    const filter = { status: 'active' };
+    
+    // Text search
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { 'company.name': { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
+    // Location filter
+    if (location) {
+      filter.$or = [
+        { 'location.city': { $regex: location, $options: 'i' } },
+        { 'location.state': { $regex: location, $options: 'i' } }
+      ];
+    }
+    
+    // Employment type filter
+    if (employmentType) {
+      filter.employmentType = employmentType;
+    }
+    
+    // Experience level filter
+    if (experienceLevel) {
+      filter.experienceLevel = experienceLevel;
+    }
+    
+    // Remote filter
+    if (isRemote !== undefined) {
+      filter['location.isRemote'] = isRemote === 'true';
+    }
+    
+    // Tag filter
+    if (tag) {
+      filter.tag = tag;
+    }
+    
+    // Company filter
+    if (company) {
+      filter['company.name'] = { $regex: company, $options: 'i' };
+    }
+    
+    // Salary range filter
+    if (salaryMin || salaryMax) {
+      filter['salary.max'] = {};
+      if (salaryMin) filter['salary.max'].$gte = parseInt(salaryMin);
+      if (salaryMax) filter['salary.min'] = { $lte: parseInt(salaryMax) };
+    }
+    
+    // Skills filter
+    if (skills) {
+      const skillsArray = skills.split(',').map(s => s.trim().toLowerCase());
+      filter['skills.allSkills'] = { $in: skillsArray };
+    }
+    
+    // Build sort object
+    const sortOptions = {};
+    if (sortBy === 'salary') {
+      sortOptions['salary.max'] = sortOrder === 'asc' ? 1 : -1;
+    } else if (sortBy === 'title') {
+      sortOptions.title = sortOrder === 'asc' ? 1 : -1;
+    } else if (sortBy === 'company') {
+      sortOptions['company.name'] = sortOrder === 'asc' ? 1 : -1;
+    } else {
+      sortOptions.postedDate = sortOrder === 'asc' ? 1 : -1;
+    }
+    
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    // Execute query
+    const [jobs, total] = await Promise.all([
+      Job.find(filter)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(parseInt(limit))
+        .select('-embedding -embedding_metadata'),
+      Job.countDocuments(filter)
+    ]);
+    
+    // Get filter statistics
+    const stats = await Job.aggregate([
+      { $match: { status: 'active' } },
+      {
+        $group: {
+          _id: null,
+          totalJobs: { $sum: 1 },
+          avgSalaryMin: { $avg: '$salary.min' },
+          avgSalaryMax: { $avg: '$salary.max' },
+          employmentTypes: { $addToSet: '$employmentType' },
+          experienceLevels: { $addToSet: '$experienceLevel' },
+          tags: { $addToSet: '$tag' },
+          companies: { $addToSet: '$company.name' }
+        }
+      }
+    ]);
+    
+    res.json({
+      success: true,
+      jobs,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / parseInt(limit)),
+        hasMore: skip + jobs.length < total
+      },
+      stats: stats[0] || {},
+      filters: {
+        search,
+        location,
+        employmentType,
+        experienceLevel,
+        isRemote,
+        tag,
+        company,
+        salaryMin,
+        salaryMax,
+        skills,
+        sortBy,
+        sortOrder
+      }
+    });
+    
+  } catch (error) {
+    logger.error('Failed to list jobs:', error);
     res.status(500).json({
       success: false,
       error: error.message

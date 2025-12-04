@@ -11,8 +11,8 @@ import JobMatch from '../models/JobMatch.js';
 import { findSemanticMatches } from './semanticMatchingService.js';
 import { logger } from '../utils/logger.js';
 
-// Watson X.ai configuration
-const WATSON_API_KEY = process.env.IBM_API_KEY;
+// Watson X.ai Configuration (Updated credentials)
+const WATSON_API_KEY = process.env.WATSONX_API_KEY || process.env.IBM_API_KEY;
 const WATSON_PROJECT_ID = process.env.IBM_PROJECT_ID;
 const IAM_TOKEN_URL = 'https://iam.cloud.ibm.com/identity/token';
 const WATSON_API_URL = 'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29';
@@ -185,6 +185,7 @@ export async function findMatchingJobs(parsedResume, options = {}) {
       employmentType = null,
       generateAISummaries = true, // Only for top 3
       useEmbeddings = false, // NEW: Enable hybrid scoring with embeddings
+      sourcePlatforms = ['file'],
     } = options;
     
     // Extract user data
@@ -226,24 +227,33 @@ export async function findMatchingJobs(parsedResume, options = {}) {
     }
     
     // Query jobs using MongoDB indexed search
-    const queryOptions = {
-      minMatchScore: minMatchScore,
-      isRemote: includeRemote ? undefined : false,
-      employmentType: employmentType,
+    const baseQueryOptions = {
+      minMatchScore,
+      employmentType,
       limit: limit * 2, // Fetch more for re-ranking
     };
-    
-    const jobs = await Job.findMatchingJobs(userSkills, queryOptions);
+
+    if (!includeRemote) {
+      baseQueryOptions.isRemote = false;
+    }
+
+    const sourceFilterLabel = Array.isArray(sourcePlatforms) && sourcePlatforms.length > 0 ? sourcePlatforms.join(',') : 'all';
+
+    const jobs = await Job.findMatchingJobs(userSkills, {
+      ...baseQueryOptions,
+      sourcePlatforms: sourcePlatforms,
+    });
     
     if (jobs.length === 0) {
       return {
         matches: [],
         total: 0,
-        message: 'No matching jobs found. Try lowering your minimum match score or updating your skills.',
+        message: 'No matching jobs found from curated jobs.csv dataset. Please update the file or relax your filters.',
         metadata: {
           processingTime: Date.now() - startTime,
           watsonCalls: 0,
           scoringMethod,
+          sourceFilter: sourceFilterLabel,
         },
       };
     }
@@ -357,6 +367,7 @@ export async function findMatchingJobs(parsedResume, options = {}) {
         processingTime: Date.now() - startTime,
         watsonCalls: watsonCallCount,
         watsonUsagePercent: ((watsonCallCount / topMatches.length) * 100).toFixed(1),
+        sourceFilter: sourceFilterLabel,
         timestamp: new Date().toISOString(),
       },
     };

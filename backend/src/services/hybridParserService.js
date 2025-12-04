@@ -40,7 +40,7 @@ import { logger } from '../utils/logger.js';
 export async function parseResume(rawText, options = {}) {
   const startTime = Date.now();
   const {
-    useLLM = true,
+    useLLM = false, // Disabled by default for speed - only use if explicitly requested
     minConfidence = 0.60,
     maxRetries = 1,
   } = options;
@@ -133,10 +133,21 @@ export async function parseResume(rawText, options = {}) {
   
   let llmResult = null;
   if (useLLM) {
-    logger.info('Calling LLM for structured extraction...');
-    llmResult = await parseResumeWithLLM(rawText);
+    try {
+      logger.info('Calling LLM for structured extraction...');
+      // Add 10 second timeout for LLM parsing
+      llmResult = await Promise.race([
+        parseResumeWithLLM(rawText),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('LLM timeout')), 10000)
+        )
+      ]);
+    } catch (error) {
+      logger.warn(`LLM parsing failed/timeout (non-critical): ${error.message}`);
+      llmResult = { success: false };
+    }
     
-    if (llmResult.success) {
+    if (llmResult && llmResult.success) {
       const llmData = llmResult.data;
       
       // Use LLM results for missing or low-confidence fields
@@ -211,14 +222,43 @@ export async function parseResume(rawText, options = {}) {
   
   // ==== PHASE 3: FALLBACK STRATEGIES ====
   
-  // Fallback: Extract skills with LLM if still empty
+  // Fallback: Extract skills with LLM if still empty (optional)
   if (result.skills.length === 0 && useLLM) {
-    logger.info('Skills empty - using LLM fallback...');
-    const llmSkills = await extractSkillsWithLLM(rawText);
-    if (llmSkills.success && llmSkills.skills.length > 0) {
-      result.skills = llmSkills.skills;
-      confidenceScores.skills = llmSkills.confidence;
-      extractionMethods.skills = 'llm_fallback';
+    try {
+      logger.info('Skills empty - using LLM fallback...');
+      // Add 5 second timeout for skill extraction
+      const llmSkills = await Promise.race([
+        extractSkillsWithLLM(rawText),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('LLM timeout')), 5000)
+        )
+      ]);
+      if (llmSkills.success && llmSkills.skills.length > 0) {
+        result.skills = llmSkills.skills;
+        confidenceScores.skills = llmSkills.confidence;
+        extractionMethods.skills = 'llm_fallback';
+      }
+    } catch (error) {
+      logger.warn(`LLM skill extraction failed/timeout (using regex only): ${error.message}`);
+    }
+  }
+  
+  // Enhanced fallback: Extract from common skill sections
+  if (result.skills.length === 0) {
+    logger.info('No skills found - trying enhanced regex extraction...');
+    const sections = rawText.split(/\n\s*\n/);
+    for (const section of sections) {
+      const sectionLower = section.toLowerCase();
+      if (sectionLower.includes('skill') || sectionLower.includes('technolog') || sectionLower.includes('tools')) {
+        const sectionSkills = extractSkillKeywords(section);
+        if (sectionSkills.skills.length > 0) {
+          result.skills = canonicalizeSkills(sectionSkills.skills);
+          confidenceScores.skills = sectionSkills.confidence;
+          extractionMethods.skills = 'regex_section';
+          logger.info(`Found ${result.skills.length} skills in dedicated section`);
+          break;
+        }
+      }
     }
   }
   

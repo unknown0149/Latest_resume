@@ -30,8 +30,112 @@ import {
   extractSkillKeywords,
 } from '../utils/regexExtractor.js';
 import { calculateYearsOfExperience, getExperienceLevel } from '../utils/experienceCalculator.js';
-import { canonicalizeSkills } from '../data/skillsCanonical.js';
+import { canonicalizeSkill, canonicalizeSkills, isKnownSkill } from '../data/skillsCanonical.js';
+import { normalizeSkill } from '../utils/skillNormalizer.js';
 import { logger } from '../utils/logger.js';
+import { analyzeSoftSkillsFromResume } from './softSkillsService.js';
+import { extractSkillsWithNER, extractJobSkills } from './aiRouter.js';
+
+// Increase NER timeout to 60 seconds
+const NER_TIMEOUT_MS = 60000;
+const MAX_FILTERED_SKILLS = 60;
+
+const ALWAYS_ALLOW_SKILLS = new Set(['ai', 'ml', 'go', 'c', 'c++', 'c#', 'ui', 'ux']);
+const NON_SKILL_EXACT = new Set([
+  'linkedin',
+  'resume',
+  'summary',
+  'objective',
+  'gaming',
+  'blogging',
+  'travelling',
+  'traveling',
+  'interests',
+  'interest',
+  'hobbies',
+  'hobby',
+  'campus',
+  'event',
+  'events',
+  'platform',
+  'bmsit',
+]);
+const NON_SKILL_KEYWORDS = [
+  'university',
+  'college',
+  'institute',
+  'school',
+  'academy',
+  'campus',
+  'platform',
+  'management',
+  'technolog',
+  'solution',
+  'department',
+  'experience',
+  'project',
+  'objective',
+  'summary',
+  'interest',
+  'hobby',
+  'linkedin',
+  'achievement',
+  'profile',
+];
+const TECH_KEYWORDS = [
+  'js', 'css', 'sql', 'api', 'cloud', 'dev', 'data', 'engineer', 'design', 'test', 'ops', 'aws', 'azure',
+  'gcp', 'front', 'back', 'stack', 'security', 'analysis', 'automation', 'mobile', 'web', 'android', 'ios',
+  'database', 'pipeline', 'microservice', 'docker', 'kubernetes', 'server', 'lang', 'framework', 'ai', 'ml'
+];
+
+const splitTokens = (value) => {
+  if (!value || typeof value !== 'string') return [];
+  return value
+    .split(/[^a-zA-Z0-9+#.]+/)
+    .map(token => token.trim().toLowerCase())
+    .filter(Boolean);
+};
+
+const buildContextStopwords = (result = {}) => {
+  const tokens = new Set();
+  splitTokens(result.name).forEach(token => tokens.add(token));
+  (result.emails || []).forEach(email => splitTokens(email).forEach(token => tokens.add(token)));
+  (result.education || []).forEach(ed => {
+    splitTokens(ed?.institution).forEach(token => tokens.add(token));
+    splitTokens(ed?.degree).forEach(token => tokens.add(token));
+    splitTokens(ed?.field).forEach(token => tokens.add(token));
+  });
+  return tokens;
+};
+
+const isLikelyValidSkill = (rawSkill, contextStopwords) => {
+  if (!rawSkill || typeof rawSkill !== 'string') return false;
+  const normalized = normalizeSkill(rawSkill);
+  if (!normalized) return false;
+  const lower = normalized.toLowerCase();
+
+  if (contextStopwords.has(lower)) return false;
+  if (NON_SKILL_EXACT.has(lower)) return false;
+  if (lower.length <= 1) return false;
+  if (lower.length <= 2 && !ALWAYS_ALLOW_SKILLS.has(lower)) return false;
+  if (NON_SKILL_KEYWORDS.some(keyword => lower.includes(keyword))) return false;
+
+  const canonical = canonicalizeSkill(normalized);
+  if (isKnownSkill(canonical) || isKnownSkill(normalized)) return true;
+
+  const hasTechKeyword = TECH_KEYWORDS.some(keyword => lower.includes(keyword));
+  return hasTechKeyword;
+};
+
+const cleanExtractedSkills = (skills, resultContext) => {
+  if (!Array.isArray(skills) || skills.length === 0) return [];
+  const contextStopwords = buildContextStopwords(resultContext);
+  const filtered = skills
+    .map(skill => normalizeSkill(skill))
+    .filter(skill => skill && isLikelyValidSkill(skill, contextStopwords))
+    .map(skill => canonicalizeSkill(skill));
+  return [...new Set(filtered)].slice(0, MAX_FILTERED_SKILLS);
+};
 
 // ═══════════════════════════════════════════════════════════════════════
 // SECTION 1: TEXT EXTRACTION (PDF/DOC/TXT)
@@ -124,17 +228,17 @@ export async function extractText(file) {
 // SECTION 2: WATSON X.AI INTEGRATION (LLM Parsing)
 // ═══════════════════════════════════════════════════════════════════════
 
-// Watson credentials from .env
-const IBM_API_KEY = process.env.IBM_API_KEY;
-const IBM_PROJECT_ID = process.env.IBM_PROJECT_ID;
-const IBM_URL = process.env.IBM_URL || 'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29';
-const IBM_MODEL_ID = process.env.IBM_MODEL_ID || 'ibm/granite-3-8b-instruct';
+// Watson credentials from .env (Updated to use new credentials)
+const IBM_API_KEY = process.env.WATSONX_API_KEY || process.env.IBM_API_KEY;
+const IBM_PROJECT_ID = process.env.WATSONX_PROJECT_ID || process.env.IBM_PROJECT_ID;
+const IBM_URL = process.env.WATSONX_URL || process.env.IBM_URL || 'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29';
+const IBM_MODEL_ID = process.env.WATSONX_MODEL_ID || process.env.IBM_MODEL_ID || 'ibm/granite-3-8b-instruct';
 
 // Log Watson configuration on module load
 if (IBM_API_KEY && IBM_PROJECT_ID) {
   logger.info(`Watson X.ai configured: API Key (${IBM_API_KEY.substring(0, 10)}...), Project ID: ${IBM_PROJECT_ID}`);
 } else {
-  logger.warn('Watson X.ai NOT configured - missing IBM_API_KEY or IBM_PROJECT_ID');
+  logger.warn('Watson X.ai NOT configured - missing WATSONX_API_KEY or WATSONX_PROJECT_ID');
 }
 
 // IAM token cache
@@ -282,7 +386,7 @@ JSON:`;
  */
 export async function parseResume(rawText, options = {}) {
   const startTime = Date.now();
-  const { useLLM = true, minConfidence = 0.60 } = options;
+  const { useLLM = false, minConfidence = 0.60 } = options; // Disabled by default for speed
   
   logger.info('Starting hybrid resume parsing...');
   
@@ -360,6 +464,26 @@ export async function parseResume(rawText, options = {}) {
     confidenceScores.skills = skillsRegex.confidence;
     extractionMethods.skills = 'regex';
   }
+  
+  // Enhanced skill extraction using Python NER
+  try {
+    logger.info('Running Python NER skill extraction...');
+    const nerResult = await extractSkillsWithNER(rawText);
+    if (nerResult.success && nerResult.skills && nerResult.skills.length > 0) {
+      const aiSkills = nerResult.skills.map(s => s.skill.toLowerCase());
+      result.skills = [...new Set([...result.skills, ...aiSkills])];
+      extractionMethods.skills = 'regex+ner';
+      confidenceScores.skills = Math.max(confidenceScores.skills || 0, 0.85);
+      logger.info(`NER extracted ${nerResult.skills.length} additional skills`);
+    } else {
+      logger.info('NER returned no additional skills, using regex skills only');
+    }
+  } catch (error) {
+    logger.warn('NER skill extraction failed, continuing with regex skills:', error.message);
+    // Continue with regex-extracted skills - don't fail the entire parse
+  }
+
+  result.skills = cleanExtractedSkills(result.skills, result);
   
   // Extract experience years
   const expResult = extractYearsExperience(rawText);
@@ -485,6 +609,19 @@ export async function parseResume(rawText, options = {}) {
     !result.name || 
     result.skills.length === 0;
   
+  // ─────────────────────────────────────────────────────────────────────
+  // PHASE 4: SOFT SKILLS ANALYSIS
+  // ─────────────────────────────────────────────────────────────────────
+  
+  let softSkills = [];
+  try {
+    softSkills = analyzeSoftSkillsFromResume(result);
+    result.soft_skills = softSkills;
+    logger.info(`Identified ${softSkills.length} soft skills`);
+  } catch (error) {
+    logger.error('Soft skills analysis failed:', error.message);
+  }
+  
   const processingTimeMs = Date.now() - startTime;
   
   logger.info(`Resume parsed in ${processingTimeMs}ms (Watson: ${llmUsed})`);
@@ -501,23 +638,24 @@ export async function parseResume(rawText, options = {}) {
       processing_time_ms: processingTimeMs,
       llm_used: llmUsed,
       missing_fields: missingFields,
-      requires_manual_review: requiresManualReview
+      requires_manual_review: requiresManualReview,
+      soft_skills_count: softSkills.length
     }
   };
 }
 
 /**
- * Quick parse: Regex only (no LLM)
+ * Quick parse: Regex only (no LLM) - FASTEST
  */
 export async function quickParse(rawText) {
   return await parseResume(rawText, { useLLM: false, minConfidence: 0.50 });
 }
 
 /**
- * Deep parse: Regex + Watson LLM for all fields
+ * Deep parse: Regex only for speed (LLM disabled)
  */
 export async function deepParse(rawText) {
-  return await parseResume(rawText, { useLLM: true, minConfidence: 0.75 });
+  return await parseResume(rawText, { useLLM: false, minConfidence: 0.75 });
 }
 
 // ═══════════════════════════════════════════════════════════════════════
