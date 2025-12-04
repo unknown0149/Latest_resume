@@ -372,6 +372,18 @@ export async function analyzeSkills(resume, targetRole) {
       throw new Error(`Unknown role: ${targetRole}`);
     }
     
+    // Extract verified skills from profile
+    let verifiedSkills = [];
+    if (resume.profile?.skillVerifications?.length) {
+      verifiedSkills = resume.profile.skillVerifications
+        .filter(v => v.verified === true && v.score >= 70)
+        .map(v => v.skill);
+      logger.info(`Found ${verifiedSkills.length} verified skills for analysis`);
+    }
+    
+    // Merge verified skills with candidate skills
+    const allCandidateSkills = [...new Set([...candidateSkills, ...verifiedSkills])];
+    
     const { requiredSkills: core_skills = [], preferredSkills: optional_skills = [] } = roleData;
     
     // ─────────────────────────────────────────────────────────────────────
@@ -403,17 +415,23 @@ export async function analyzeSkills(resume, targetRole) {
     };
 
     const evaluateSkillPresence = (skillName, type, defaultPriority) => {
-      const hasSkill = candidateSkills.some(candidateSkill => matchesSkill(candidateSkill, skillName));
+      const hasSkill = allCandidateSkills.some(candidateSkill => matchesSkill(candidateSkill, skillName));
 
       if (hasSkill) {
         const proficiency = calculateSkillProficiency(skillName, resume);
         const level = proficiency >= 70 ? 'Expert' : proficiency >= 40 ? 'Intermediate' : 'Beginner';
+        
+        // Check if this skill is verified
+        const isVerified = verifiedSkills.some(v => 
+          matchesSkill(v, skillName)
+        );
 
         skillsHave.push({
           skill: skillName,
           type,
           level,
-          proficiency
+          proficiency,
+          verified: isVerified, // Add verification status
         });
         return;
       }
@@ -511,8 +529,8 @@ export async function analyzeSkills(resume, targetRole) {
     const salaryBoostOpportunities = [];
     
     for (const boostSkill of salaryBoostSkills) {
-      // Check if candidate is missing this high-impact skill
-      const isMissing = !candidateSkills.some(s =>
+      // Check if candidate is missing this high-impact skill (including verified skills)
+      const isMissing = !allCandidateSkills.some(s =>
         s.toLowerCase().includes(boostSkill.skill.toLowerCase()) ||
         boostSkill.skill.toLowerCase().includes(s.toLowerCase())
       );

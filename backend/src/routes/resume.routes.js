@@ -1066,4 +1066,72 @@ router.post('/generate-resources', authenticateToken, async (req, res) => {
   }
 })
 
+/**
+ * GET /api/resume/user/verifications
+ * Get all skill verifications across user's resumes
+ */
+router.get('/user/verifications', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+    
+    if (!userId) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'User ID not found',
+        statusCode: 401,
+      });
+    }
+    
+    // Find all active resumes for this user
+    const resumes = await Resume.find({ userId: userId, isActive: true })
+      .select('resumeId profile.skillVerifications createdAt')
+      .sort({ createdAt: -1 });
+    
+    // Aggregate all verifications
+    const allVerifications = new Map();
+    
+    for (const resume of resumes) {
+      const verifications = resume.profile?.skillVerifications || [];
+      
+      for (const verification of verifications) {
+        const skillKey = verification.skill?.toLowerCase();
+        if (!skillKey) continue;
+        
+        // Keep the latest/best verification for each skill
+        const existing = allVerifications.get(skillKey);
+        if (!existing || verification.score > existing.score || 
+            new Date(verification.lastVerifiedAt) > new Date(existing.lastVerifiedAt)) {
+          allVerifications.set(skillKey, {
+            ...verification,
+            resumeId: resume.resumeId,
+            verifiedOn: resume.createdAt
+          });
+        }
+      }
+    }
+    
+    const verifiedSkills = Array.from(allVerifications.values())
+      .sort((a, b) => b.score - a.score);
+    
+    logger.info(`Retrieved ${verifiedSkills.length} verified skills for user ${userId}`);
+    
+    res.json({
+      success: true,
+      userId: userId,
+      totalVerified: verifiedSkills.length,
+      verifiedSkills: verifiedSkills,
+      resumeCount: resumes.length
+    });
+    
+  } catch (error) {
+    logger.error('Failed to get user verifications:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      message: 'Failed to retrieve verifications',
+      statusCode: 500,
+    });
+  }
+});
+
 export default router
+

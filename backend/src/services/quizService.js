@@ -5,8 +5,24 @@
 
 import crypto from 'crypto';
 import Quiz from '../models/Quiz.js';
+import Resume from '../models/Resume.js';
 import { logger } from '../utils/logger.js';
 import { generateQuizQuestions } from './aiRouter.js';
+
+/**
+ * Determine badge level based on quiz score
+ */
+function determineBadge(score) {
+  if (score >= 85) {
+    return { level: 'gold', label: 'Gold Badge', color: '#fbbf24', icon: '🥇' };
+  } else if (score >= 70) {
+    return { level: 'silver', label: 'Silver Badge', color: '#d1d5db', icon: '🥈' };
+  } else if (score >= 50) {
+    return { level: 'bronze', label: 'Bronze Badge', color: '#fb923c', icon: '🥉' };
+  } else {
+    return { level: 'none', label: 'Needs Practice', color: '#94a3b8', icon: '🎯' };
+  }
+}
 
 /**
  * Generate a new MCQ quiz for a skill
@@ -166,6 +182,93 @@ export async function submitQuiz(quizId, answers) {
     await quiz.save();
     
     logger.info(`Quiz ${quizId} completed: Score ${quiz.score}%`);
+    
+    // ====================================================================
+    // UPDATE RESUME VERIFICATION STATUS
+    // ====================================================================
+    try {
+      const resume = await Resume.findOne({ resumeId: quiz.resumeId, isActive: true });
+      
+      if (resume) {
+        // Initialize profile and skillVerifications if needed
+        if (!resume.profile) {
+          resume.profile = {};
+        }
+        if (!Array.isArray(resume.profile.skillVerifications)) {
+          resume.profile.skillVerifications = [];
+        }
+        
+        // Determine badge based on score
+        const badge = determineBadge(quiz.score);
+        
+        // Check if verification already exists
+        const existingIndex = resume.profile.skillVerifications.findIndex(
+          v => v.skill?.toLowerCase() === quiz.skillName.toLowerCase()
+        );
+        
+        const verificationData = {
+          skill: quiz.skillName,
+          score: quiz.score,
+          correct: quiz.correctAnswers,
+          total: quiz.totalQuestions,
+          verified: quiz.score >= 70,
+          lastVerifiedAt: quiz.completedAt,
+          badge: {
+            level: badge.level,
+            label: badge.label,
+            awardedAt: quiz.completedAt
+          }
+        };
+        
+        if (existingIndex >= 0) {
+          // Update existing verification
+          resume.profile.skillVerifications[existingIndex] = verificationData;
+        } else {
+          // Add new verification
+          resume.profile.skillVerifications.push(verificationData);
+        }
+        
+        // Also sync with customSkills if exists
+        if (!Array.isArray(resume.profile.customSkills)) {
+          resume.profile.customSkills = [];
+        }
+        
+        const skillIndex = resume.profile.customSkills.findIndex(
+          s => s.name?.toLowerCase() === quiz.skillName.toLowerCase()
+        );
+        
+        if (skillIndex >= 0) {
+          resume.profile.customSkills[skillIndex] = {
+            ...resume.profile.customSkills[skillIndex],
+            verified: verificationData.verified,
+            score: verificationData.score,
+            lastVerifiedAt: verificationData.lastVerifiedAt,
+            badge: verificationData.badge,
+          };
+        } else {
+          resume.profile.customSkills.push({
+            name: quiz.skillName,
+            level: quiz.score,
+            category: 'Technical',
+            verified: verificationData.verified,
+            score: verificationData.score,
+            lastVerifiedAt: verificationData.lastVerifiedAt,
+            badge: verificationData.badge,
+          });
+        }
+        
+        resume.markModified('profile.skillVerifications');
+        resume.markModified('profile.customSkills');
+        await resume.save();
+        
+        logger.info(`Updated resume ${quiz.resumeId} with quiz verification for ${quiz.skillName}`);
+      } else {
+        logger.warn(`Resume ${quiz.resumeId} not found for quiz verification update`);
+      }
+    } catch (resumeError) {
+      logger.error('Failed to update resume verification:', resumeError);
+      // Don't throw - quiz completion should still succeed
+    }
     
     // Return detailed results
     return {

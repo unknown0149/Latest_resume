@@ -72,9 +72,43 @@ function calculateSkillPriority(skill, roleData, salaryBoostData) {
 }
 
 /**
- * Analyze skills for a specific target role
+ * Check if a skill is verified by the user
+ * @param {string} skill - Skill to check
+ * @param {Array} verifiedSkills - Array of verified skill objects
+ * @returns {Object|null} - Verification data if found, null otherwise
  */
-export async function analyzeSkills(parsedResume, targetRoleName) {
+function findVerifiedSkill(skill, verifiedSkills = []) {
+  if (!Array.isArray(verifiedSkills) || verifiedSkills.length === 0) {
+    return null;
+  }
+  
+  const skillLower = skill.toLowerCase().trim();
+  
+  // Check exact match first
+  let verified = verifiedSkills.find(v => 
+    v.skill && v.skill.toLowerCase().trim() === skillLower
+  );
+  
+  if (verified) return verified;
+  
+  // Check fuzzy match using normalizeSkill
+  const normalizedSkill = normalizeSkillsArray([skill])[0];
+  verified = verifiedSkills.find(v => {
+    if (!v.skill) return false;
+    const normalizedVerified = normalizeSkillsArray([v.skill])[0];
+    return normalizedVerified === normalizedSkill;
+  });
+  
+  return verified || null;
+}
+
+/**
+ * Analyze skills for a specific target role
+ * @param {Object} parsedResume - Resume data (can be full resume document)
+ * @param {string} targetRoleName - Target job role
+ * @param {Object} options - Additional options (verifiedSkills, userId, etc.)
+ */
+export async function analyzeSkills(parsedResume, targetRoleName, options = {}) {
   try {
     logger.info(`Analyzing skills for role: ${targetRoleName}`);
     
@@ -82,6 +116,32 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
     const roleData = getRoleByName(targetRoleName);
     if (!roleData) {
       throw new Error(`Role not found: ${targetRoleName}`);
+    }
+    
+    // Extract verified skills from multiple sources
+    let verifiedSkills = options.verifiedSkills || [];
+    
+    // Check if parsedResume has profile.skillVerifications
+    if (parsedResume.profile?.skillVerifications?.length) {
+      verifiedSkills = parsedResume.profile.skillVerifications.filter(v => 
+        v.verified === true && v.score >= 70
+      );
+      logger.info(`Found ${verifiedSkills.length} verified skills from profile`);
+    }
+    
+    // Also check parsed_resume.verification_status
+    if (parsedResume.parsed_resume?.verification_status?.verifiedSkills?.length) {
+      const additionalVerified = parsedResume.parsed_resume.verification_status.verifiedSkills;
+      verifiedSkills = [...verifiedSkills, ...additionalVerified];
+      // Deduplicate by skill name
+      const seen = new Set();
+      verifiedSkills = verifiedSkills.filter(v => {
+        const key = v.skill?.toLowerCase();
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      logger.info(`Total verified skills after merge: ${verifiedSkills.length}`);
     }
     
     // Extract and normalize resume skills
@@ -92,9 +152,18 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
     if (parsedResume.parsed_data?.skills?.length) {
       resumeSkills.push(...parsedResume.parsed_data.skills);
     }
+    if (parsedResume.parsed_resume?.skills?.length) {
+      resumeSkills.push(...parsedResume.parsed_resume.skills);
+    }
+    
+    // Add verified skills to resume skills (user has proven they know these)
+    const verifiedSkillNames = verifiedSkills.map(v => v.skill).filter(Boolean);
+    resumeSkills.push(...verifiedSkillNames);
     
     const normalizedSkills = normalizeSkillsArray([...new Set(resumeSkills)]);
     const resumeText = parsedResume.extracted_text?.full_text || '';
+    
+    logger.info(`Analyzing with ${normalizedSkills.length} skills (including ${verifiedSkillNames.length} verified)`);
     
     // Match skills against role requirements
     const requiredMatch = matchSkillsFuzzy(roleData.requiredSkills, normalizedSkills);
@@ -105,12 +174,19 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
       const matchesRequired = requiredMatch.matched.some(s => s.toLowerCase() === skill.toLowerCase());
       const matchesPreferred = preferredMatch.matched.some(s => s.toLowerCase() === skill.toLowerCase());
       
+      // Check if skill is verified
+      const verificationData = findVerifiedSkill(skill, verifiedSkills);
+      const isVerified = verificationData !== null;
+      
       return {
         skill: skill,
         type: matchesRequired ? 'required' : matchesPreferred ? 'preferred' : 'additional',
         level: estimateSkillLevel(skill, resumeText, normalizedSkills),
         matchesRole: matchesRequired || matchesPreferred,
-        proficiency: matchesRequired ? 80 : matchesPreferred ? 70 : 60 // Estimate proficiency
+        proficiency: matchesRequired ? 80 : matchesPreferred ? 70 : 60, // Estimate proficiency
+        verified: isVerified,
+        verificationScore: verificationData?.score || null,
+        verificationBadge: verificationData?.badge || null,
       };
     });
     
@@ -122,6 +198,13 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
     
     // Required skills missing (highest priority)
     for (const skill of requiredMatch.missing) {
+      // Skip if user has verified this skill (even if not on current resume)
+      const verificationData = findVerifiedSkill(skill, verifiedSkills);
+      if (verificationData && verificationData.verified && verificationData.score >= 70) {
+        logger.info(`Skipping ${skill} - already verified with score ${verificationData.score}`);
+        continue;
+      }
+      
       const boostData = salaryBoostData.find(sb => sb.skill.toLowerCase() === skill.toLowerCase());
       const priorityData = calculateSkillPriority(skill, roleData, boostData);
       
@@ -139,6 +222,13 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
     
     // Preferred skills missing (medium priority)
     for (const skill of preferredMatch.missing) {
+      // Skip if user has verified this skill
+      const verificationData = findVerifiedSkill(skill, verifiedSkills);
+      if (verificationData && verificationData.verified && verificationData.score >= 70) {
+        logger.info(`Skipping ${skill} - already verified with score ${verificationData.score}`);
+        continue;
+      }
+      
       const boostData = salaryBoostData.find(sb => sb.skill.toLowerCase() === skill.toLowerCase());
       const priorityData = calculateSkillPriority(skill, roleData, boostData);
       
@@ -165,6 +255,9 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
       'USD'
     );
     
+    // Count verified skills
+    const verifiedCount = verifiedSkills.filter(v => v.verified && v.score >= 70).length;
+    
     // Build response
     const result = {
       targetRole: {
@@ -176,15 +269,17 @@ export async function analyzeSkills(parsedResume, targetRoleName) {
       skillsSummary: {
         totalHave: skillsHave.length, // Total resume skills
         totalMissing: skillsMissing.length,
+        totalVerified: verifiedCount, // NEW: Count of verified skills
         requiredHave: skillsHave.filter(s => s.type === 'required').length,
-        requiredMissing: requiredMatch.missing.length,
+        requiredMissing: skillsMissing.filter(s => s.type === 'required').length,
         preferredHave: skillsHave.filter(s => s.type === 'preferred').length,
-        preferredMissing: preferredMatch.missing.length,
+        preferredMissing: skillsMissing.filter(s => s.type === 'preferred').length,
         additionalSkills: skillsHave.filter(s => s.type === 'additional').length,
         completeness: ((requiredMatch.matched.length / roleData.requiredSkills.length) * 100).toFixed(1),
       },
       skillsHave: skillsHave,
       skillsMissing: skillsMissing.slice(0, 10), // Top 10 missing skills
+      verifiedSkills: verifiedSkills.filter(v => v.verified && v.score >= 70), // NEW: Include verified skills in response
       salaryBoostOpportunities: {
         topOpportunities: skillsMissing
           .filter(s => s.salaryBoost)

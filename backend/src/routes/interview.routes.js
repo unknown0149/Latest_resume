@@ -129,7 +129,11 @@ router.post('/submit', async (req, res) => {
     if (resume) {
       const credibilityAssessment = await updateResumeCredibility(resume, verificationResult);
       
-      // Add skill verification to resume
+      // ====================================================================
+      // SYNC VERIFICATION TO BOTH LOCATIONS
+      // ====================================================================
+      
+      // 1. Update parsed_resume.verification_status (for credibility system)
       const parsedResume = Object.fromEntries(resume.parsed_resume || new Map());
       parsedResume.verification_status = {
         ...parsedResume.verification_status,
@@ -137,6 +141,53 @@ router.post('/submit', async (req, res) => {
         questionableSkills: questionableSkills
       };
       resume.parsed_resume = new Map(Object.entries(parsedResume));
+      
+      // 2. Update profile.skillVerifications (for skill analysis integration)
+      if (!resume.profile) {
+        resume.profile = {};
+      }
+      if (!Array.isArray(resume.profile.skillVerifications)) {
+        resume.profile.skillVerifications = [];
+      }
+      
+      // Helper function to determine badge
+      const determineBadge = (score) => {
+        if (score >= 85) return { level: 'gold', label: 'Gold Badge', color: '#fbbf24', icon: '🥇' };
+        if (score >= 70) return { level: 'silver', label: 'Silver Badge', color: '#d1d5db', icon: '🥈' };
+        if (score >= 50) return { level: 'bronze', label: 'Bronze Badge', color: '#fb923c', icon: '🥉' };
+        return { level: 'none', label: 'Needs Practice', color: '#94a3b8', icon: '🎯' };
+      };
+      
+      // Add verified skills to profile.skillVerifications
+      for (const verifiedSkill of verifiedSkills) {
+        const existingIndex = resume.profile.skillVerifications.findIndex(
+          v => v.skill?.toLowerCase() === verifiedSkill.skill.toLowerCase()
+        );
+        
+        const badge = determineBadge(verifiedSkill.score);
+        const verificationData = {
+          skill: verifiedSkill.skill,
+          score: verifiedSkill.score,
+          correct: Math.round(verifiedSkill.score / 100 * session.questions.length),
+          total: session.questions.length,
+          verified: verifiedSkill.score >= 70,
+          lastVerifiedAt: new Date(),
+          badge: {
+            level: badge.level,
+            label: badge.label,
+            awardedAt: new Date()
+          }
+        };
+        
+        if (existingIndex >= 0) {
+          resume.profile.skillVerifications[existingIndex] = verificationData;
+        } else {
+          resume.profile.skillVerifications.push(verificationData);
+        }
+      }
+      
+      resume.markModified('profile.skillVerifications');
+      resume.markModified('parsed_resume');
       await resume.save();
       
       // Clean up session
